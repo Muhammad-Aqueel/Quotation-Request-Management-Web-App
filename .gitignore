@@ -1,0 +1,9 @@
+# Exclude TCPDF library
+libs/tcpdf/
+
+# Exclude config file
+config.php
+
+# Exclude specific subfolders in uploads
+uploads/request_attachments/
+uploads/quotation_attachments/

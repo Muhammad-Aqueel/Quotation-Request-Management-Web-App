@@ -1,0 +1,138 @@
+# Quotation Request Management Web App
+
+A PHP & MySQL-based web application for managing vendor quotations. Built without frameworks, this app allows your company to post requests (e.g., furniture, electrical, food) and receive quotations from vendors, compare them, and manage approvals.
+
+---
+
+## Features Overview
+
+### Vendor Panel
+- Public access without login
+- List of all active requests
+- Submit quotation for a specific request
+- Upload multiple attachments
+- CAPTCHA verification
+- Real-time filters (by category & date) with AJAX
+- Responsive mobile support
+- Live validation and file size/type filtering
+
+### Admin Panel
+- Login-secured panel with session management
+- Dashboard with summary stats (real-time update)
+- Manage requests and request items
+- Assign categories to requests
+- Upload attachments with each request
+- Edit/delete requests and attachments
+- Active/Deactivate requests
+- Trash/recycle bin for quotations (soft delete)
+- Bulk Delete, Restore, Approve, Reject, Active/Deactivate
+- Compare quotations (total and per-item matrix)
+- Export selected quotations:
+  - PDF
+  - ZIP (with attachments)
+- Notification system:
+  - Bell icon with live quote updates
+  - Toastr visual + sound alerts
+  - Mark-as-read when quote viewed
+- AJAX file deletion, Toastr messages
+- Profile management (change email/password)
+- Full responsive design using Bootstrap 5.3
+- Datatable for requests and quotations tables
+
+### Future Features
+- Vendors data operations page
+
+---
+
+## Requirements
+
+- PHP 7.4+ with PDO
+- MySQL or MariaDB
+- Apache/Nginx (mod_rewrite optional)
+- ZIP extension (By adding `extension=zip` in php.ini)
+- GD extension (for image handling if needed)
+
+---
+
+## Installation
+
+1. **Upload** the project to your web host (e.g. `htdocs/quotation-app`)
+2. **Navigate** to `htdocs/quotation-app`(select role) or `/install/index.php`
+3. Enter:
+   - MySQL host, user, password, and database name
+   - Admin credentials (username/email/password)
+4. Click **Install Now**
+    > **Warning:** Sometimes antivirus detect `test_connection.php` as,
+    **Type of risk:** `webshell.phpex.post.eval`
+    due to its checking for host and database connection(code), so allow this file in antivrius or add in ignore list without any worries.
+5. Installer will:
+   - Create DB tables (via `schema.sql`)
+   - Save `config.php`
+   - Redirect to admin login
+6. **Download** TCPDF Go to: [TCPDF Github](https://github.com/tecnickcom/tcpdf)
+   - Download and extract it into: `admin/libs/tcpdf/`
+   > **tcpdf.php** must be showed up like this `admin/libs/tcpdf/tcpdf.php`
+   > TCPDF is used for:
+   > Exporting selected quotations as a single PDF via `export_selected.php`
+   > Generating individual PDFs inside ZIP exports via `export_selected_zip.php`
+
+---
+
+## Security Measures
+
+- Prepared SQL statements (PDO)
+- File validation:
+  - Allowed extensions
+  - MIME type check
+  - Max size: individual (1 MB), total (5 MB)
+- CAPTCHA to block bots
+- Toastr error handling
+- Admin login protection
+- `config.php` secured by `.htaccess` (optional)
+
+---
+
+## Stats (Dashboard Widgets)
+- Pending Quotations
+- Quotations Today
+- Quotations This Month
+- Total Requests
+- Active Vendors
+- Inactive Vendors
+- Real-time notification(count)
+
+---
+
+## Trigger-Based Recalculation
+
+Triggers handle auto-updates:
+- When a request item is updated/deleted, related quotation totals auto-recalculate.
+
+---
+
+## Clean Package Build 
+
+Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excluding files:
+- `uploads`           *runtime data attachments and temp files*
+- `libs`              *external library folder*
+- `config.php`        *local credentials*
+- `zip_me_first.php`  *build script*
+- `.git`              *version control*
+- `__MACOSX`          *system folders*
+
+---
+
+## Developer Notes
+
+- No third-party frameworks (plain PHP, MySQL, JS)
+- Bootstrap 5.3.3 UI
+- Font Awesome icons used
+- Responsive, accessible UI
+- AJAX used for:
+  - Vendor filtering
+  - Attachment deletion
+  - Notifications
+
+---
+
+© 2025 Quotation Management System
