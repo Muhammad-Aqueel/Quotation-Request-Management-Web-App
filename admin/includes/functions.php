@@ -75,3 +75,28 @@ function upload_files($input_name, $upload_dir, $quotation_id = null, $pdo = nul
 
     return ['uploaded' => $uploaded, 'skipped' => $skipped];
 }
+
+function recalculateQuotationTotalsForRequestItem($pdo, int $request_item_id): void {
+    // Find all quotation_ids using this request_item_id
+    $stmt = $pdo->prepare("SELECT DISTINCT quotation_id FROM quotation_items WHERE request_item_id = ?");
+    $stmt->execute([$request_item_id]);
+    $quotation_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    foreach ($quotation_ids as $qid) {
+        recalculateQuotationTotal($pdo, (int)$qid);
+    }
+}
+
+function recalculateQuotationTotal($pdo, int $quotation_id): void {
+    $stmt = $pdo->prepare("
+        SELECT SUM(qi.unit_price * ri.quantity) AS total
+        FROM quotation_items qi
+        JOIN request_items ri ON qi.request_item_id = ri.id
+        WHERE qi.quotation_id = ?
+    ");
+    $stmt->execute([$quotation_id]);
+    $total = $stmt->fetchColumn() ?? 0;
+
+    $stmt = $pdo->prepare("UPDATE quotations SET total_amount = ? WHERE id = ?");
+    $stmt->execute([$total, $quotation_id]);
+}

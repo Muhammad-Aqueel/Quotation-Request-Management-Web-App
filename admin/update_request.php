@@ -67,15 +67,17 @@ if(isset($_POST['item_id']) || isset($_POST['item_name']) || isset($_POST['quant
 
         if ($item_name && $qty > 0) {
             if ($item_id > 0) {
-                // ✅ Update existing item
+                // Update existing item
                 $stmt = $pdo->prepare("UPDATE request_items SET item_name = ?, quantity = ? WHERE id = ? AND request_id = ?");
                 $stmt->execute([$item_name, $qty, $item_id, $id]);
             } else {
-                // ✅ Insert new item
+                // Insert new item
                 $stmt = $pdo->prepare("INSERT INTO request_items (request_id, item_name, quantity) VALUES (?, ?, ?)");
                 $stmt->execute([$id, $item_name, $qty]);
             }
         }
+        // Recalculate quotation total amount // trigger(trg_update_total_on_quantity_change) alternate
+        // recalculateQuotationTotalsForRequestItem($pdo, $item_id);
     }
 }
 

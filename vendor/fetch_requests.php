@@ -21,7 +21,7 @@ if ($date_to) {
   $params[] = $date_to . ' 23:59:59';
 }
 
-$sql .= "ORDER BY created_at DESC";
+// $sql .= "ORDER BY created_at DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $requests = $stmt->fetchAll();
