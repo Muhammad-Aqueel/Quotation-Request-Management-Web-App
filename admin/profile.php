@@ -1,10 +1,10 @@
 <?php
 include 'includes/header.php';
 
-$id = $_SESSION['admin_id'];
+$id = $_SESSION['user_id'];
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id]);
-$admin = $stmt->fetch();
+$user = $stmt->fetch();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
@@ -28,16 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <form method="post" class="border p-3 rounded bg-light m-auto shadow-sm col-md-6">
   <div class="mb-3">
     <label class="form-label"><i class="fas fa-user"></i> Username</label>
-    <input type="text" class="form-control" value="<?= htmlspecialchars($admin['username']) ?>" disabled>
+    <input type="text" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" disabled>
   </div>
 
   <div class="mb-3">
     <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
-    <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($admin['email']) ?>" required>
+    <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
   </div>
 
   <div class="mb-3">
-    <label class="form-label"><i class="fas fa-lock"></i> New Password (leave blank to keep current)</label>
+    <label class="form-label"><i class="fas fa-lock"></i> New Password <small class="text-muted">(leave empty to keep current)</small></label>
     <input type="password" class="form-control" name="password">
   </div>
 

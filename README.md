@@ -1,11 +1,9 @@
-# Quotation Request Management Web App
-
+﻿# Quotation Request Management Web App
 A PHP & MySQL-based web application for managing vendor quotations. Built without frameworks, this app allows your company to post requests (e.g., furniture, electrical, food) and receive quotations from vendors, compare them, and manage approvals.
 
 ---
 
 ## Features Overview
-
 ### Vendor Panel
 - Public access without login
 - List of all active requests
@@ -16,7 +14,7 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 - Responsive mobile support
 - Live validation and file size/type filtering
 
-### Admin Panel
+### Admin Dashboard
 - Login-secured panel with session management
 - Dashboard with summary stats (real-time update)
 - Manage requests and request items
@@ -38,6 +36,8 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 - Profile management (change email/password)
 - Full responsive design using Bootstrap 5.3
 - Datatable for requests and quotations tables
+- User management **(only for admin)**
+- Three roles: Admin, Student and OSAS
 
 ### Future Features
 - Vendors data operations page
@@ -45,7 +45,6 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 ---
 
 ## Requirements
-
 - PHP 7.4+ with PDO
 - MySQL or MariaDB
 - Apache/Nginx (mod_rewrite optional)
@@ -55,7 +54,6 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 ---
 
 ## Installation
-
 1. **Upload** the project to your web host (e.g. `htdocs/quotation-app`)
 2. **Navigate** to `htdocs/quotation-app`(select role) or `/install/index.php`
 3. Enter:
@@ -79,7 +77,6 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 ---
 
 ## Security Measures
-
 - Prepared SQL statements (PDO)
 - File validation:
   - Allowed extensions
@@ -104,14 +101,12 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 ---
 
 ## Trigger-Based Recalculation
-
 Triggers handle auto-updates:
 - When a request item is updated/deleted, related quotation totals auto-recalculate.
 
 ---
 
 ## Clean Package Build 
-
 Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excluding files:
 - `uploads`           *runtime data attachments and temp files*
 - `libs`              *external library folder*
@@ -123,7 +118,6 @@ Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excludin
 ---
 
 ## Developer Notes
-
 - No third-party frameworks (plain PHP, MySQL, JS)
 - Bootstrap 5.3.3 UI
 - Font Awesome icons used

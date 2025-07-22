@@ -3,7 +3,8 @@ CREATE TABLE  IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) UNIQUE,
   password_hash VARCHAR(255),
-  email VARCHAR(100)
+  email VARCHAR(100),
+  role ENUM('admin', 'student', 'osas') NOT NULL
 );
 
 -- Create categories table

@@ -3,7 +3,7 @@ session_start();
 require_once 'includes/db.php';
 require_once 'includes/csrf.php';
 
-if (isset($_SESSION['admin_id'] ) || isset($_SESSION['admin_username'])) {
+if (isset($_SESSION['user_id'] ) || isset($_SESSION['user_username'])) {
   header("Location: dashboard.php");
 }
 
@@ -13,11 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
-    $admin = $stmt->fetch();
+    $user = $stmt->fetch();
 
-    if ($admin && password_verify($password, $admin['password_hash'])) {
-        $_SESSION['admin_id'] = $admin['id'];
-        $_SESSION['admin_username'] = $admin['username'];
+    if ($user && password_verify($password, $user['password_hash'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_username'] = $user['username'];
+        $_SESSION['user_role'] = $user['role'];
         header("Location: dashboard.php");
         exit;
     } else {

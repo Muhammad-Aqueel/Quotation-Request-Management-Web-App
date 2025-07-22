@@ -101,6 +101,13 @@
           <i class="fas fa-file-invoice-dollar text-center n-icon"></i> Quotations
         </a>
       </li>
+      <?php if ($_SESSION['user_role'] === 'admin'): ?>
+        <li class="nav-item">
+          <a class="nav-link <?= is_active('user_management.php') ?>" href="user_management.php">
+            <i class="fas fa-users text-center n-icon"></i> Users
+          </a>
+        </li>
+      <?php endif; ?>
       <li class="nav-item">
         <a class="nav-link me-4 <?= is_active('profile.php') ?>" href="profile.php">
           <i class="fas fa-user-cog text-center n-icon"></i> Profile

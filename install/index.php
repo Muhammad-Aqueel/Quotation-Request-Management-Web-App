@@ -24,8 +24,8 @@
           $pdo->exec($sql);
 
           $hash = password_hash($admin_pass, PASSWORD_DEFAULT);
-          $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)");
-          $stmt->execute([$admin_user, $hash, $admin_email]);
+          $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, email, role) VALUES (?, ?, ?, ?)");
+          $stmt->execute([$admin_user, $hash, $admin_email, 'admin']);
 
           $config = "<?php\n";
           $config .= "define('DB_HOST', '$host');\n";

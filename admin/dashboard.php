@@ -15,7 +15,7 @@
       min-height: 65px;
   }
 </style>
-<h2 class="mb-4"><i class="fas fa-user-shield"></i> Welcome, <?= htmlspecialchars($_SESSION['admin_username']) ?></h2>
+<h2 class="mb-4"><i class="fas fa-user-shield"></i> Welcome, <?= htmlspecialchars($_SESSION['user_username']) ?></h2>
 
 <div class="row g-3">
   <div class="col-md-4">
