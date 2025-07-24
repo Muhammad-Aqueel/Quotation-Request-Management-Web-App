@@ -62,7 +62,7 @@
     if (file_exists($config_path)) {
       die("<div class='alert alert-success text-center' style='padding:20px;font-family:sans-serif;'>
         <i class='fas fa-check-circle'></i> Application is installed.<br><br>
-        <a href='../admin/login.php' class='btn btn-success'><i class='fas fa-sign-in-alt'></i> Login</a>
+        <a href='../authenticate/login.php' class='btn btn-success'><i class='fas fa-sign-in-alt'></i> Login</a>
       </div>");
     }
   ?>

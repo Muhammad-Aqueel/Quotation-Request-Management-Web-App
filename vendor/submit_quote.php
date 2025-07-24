@@ -2,7 +2,7 @@
     session_start();
     // include 'includes/header.php';
     require_once 'includes/db.php';
-    require_once '../admin/includes/functions.php';
+    require_once '../authenticate/includes/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 

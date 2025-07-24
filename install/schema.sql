@@ -1,4 +1,4 @@
--- Admin Users
+-- Users
 CREATE TABLE  IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) UNIQUE,
@@ -13,15 +13,26 @@ CREATE TABLE IF NOT EXISTS request_categories (
   name VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- Create societies table
+CREATE TABLE IF NOT EXISTS societies (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  society_name VARCHAR(255) NOT NULL UNIQUE
+);
+
 -- Request Table
 CREATE TABLE IF NOT EXISTS requests (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255),
   category_id int,
+  user_id int,
+  society_id INT,
   description TEXT,
   status ENUM('0','1') NOT NULL,
+  approval_status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (category_id) REFERENCES request_categories(id)
+  FOREIGN KEY (category_id) REFERENCES request_categories(id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (society_id) REFERENCES societies(id)
 );
 
 -- Items in each request

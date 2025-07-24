@@ -33,7 +33,7 @@
     <h1 class="mb-4">Choose a Role</h1>
     <div class="row g-4 justify-content-center">
       <div class="col-12 col-md-4">
-        <a href="./admin/" class="card-link">
+        <a href="./authenticate/" class="card-link">
           <div class="card text-white bg-primary h-100 text-center">
             <div class="card-body d-flex align-items-center justify-content-center">
               <h2 class="card-title">Admin</h2>
