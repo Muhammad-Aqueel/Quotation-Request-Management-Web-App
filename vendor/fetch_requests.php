@@ -1,5 +1,5 @@
 <?php
-require_once '../authenticate/includes/db.php';
+require_once 'includes/db.php';
 
 $category = $_POST['category_id'] ?? '';
 $date_from = $_POST['date_from'] ?? '';
