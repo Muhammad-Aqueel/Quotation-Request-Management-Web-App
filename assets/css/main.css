@@ -205,6 +205,22 @@ main.form-signin {
   background: #2b3035;
 }
 
+[data-bs-theme="dark"] .-range-from-:hover,[data-bs-theme="dark"] .-range-to-:hover {
+  background: #2da8db;
+}
+
+[data-bs-theme="dark"] .air-datepicker-nav--action:hover {
+  background: #343a40;
+}
+
+[data-bs-theme="dark"] .air-datepicker-nav--action:active {
+  background: #2b3035;
+}
+
+[data-bs-theme="dark"] .-in-range-:hover {
+  background: #274152;
+}
+
 .air-datepicker-cell.-current- {
   font-weight: bold;
 }
