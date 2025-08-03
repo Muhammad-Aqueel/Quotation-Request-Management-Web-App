@@ -12,14 +12,14 @@
             try {
                 $stmt = $pdo->prepare("INSERT INTO societies (society_name) VALUES (?)");
                 $stmt->execute([$name]);
-                $message = "<div class='alert alert-success'><i class='fas fa-exclamation-triangle'></i> Society added.</div>";
+                $message = "<div class='alert alert-success'><i class='fas fa-exclamation-circle'></i> Society added.</div>";
             } catch (PDOException $e) {
                 if ($e->errorInfo[1] == 1062) {
                   // Optional: extract more if needed
                   $error = $e->errorInfo[2];
                   $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . str_replace("for key", "for", $error) . "</div>";
                 } else {
-                  $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+                  $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
                 }
             }
         }
@@ -31,9 +31,9 @@
           $id = intval($_POST['delete_id']);
           $stmt = $pdo->prepare("DELETE FROM societies WHERE id = ?");
           $stmt->execute([$id]);
-          $message = "<div class='alert alert-info'><i class='fas fa-exclamation-triangle'></i>  Society deleted.</div>";
+          $message = "<div class='alert alert-info'><i class='fas fa-exclamation-circle'></i>  Society deleted.</div>";
         } catch (PDOException $e) {
-          $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+          $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
         }
     }
 

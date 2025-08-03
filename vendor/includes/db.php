@@ -2,7 +2,7 @@
 $config_path = __DIR__ . '/../../config.php';
 
 if (!file_exists($config_path)) {
-    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-triangle'></i> Unkown Error.</div>";
+    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Unkown Error.</div>";
     exit;
 }
 

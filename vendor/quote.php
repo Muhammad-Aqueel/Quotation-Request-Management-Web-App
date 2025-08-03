@@ -4,7 +4,7 @@
 
   $request_id = intval($_GET['request_id'] ?? 0);
   if (!$request_id) {
-    echo "<div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No request selected.</div>";
+    echo "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> No request selected.</div>";
     include 'includes/footer.php';
     exit;
   }
@@ -14,7 +14,7 @@
   $request = $stmt->fetch();
 
   if (!$request) {
-    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</div>";
+    echo "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Request not found.</div>";
     include 'includes/footer.php';
     exit;
   }
@@ -184,7 +184,7 @@
       <h5 class="mt-2 mb-3"><i class="fas fa-comment-alt"></i> Message / Notes</h5>
       <textarea class="form-control mb-3" name="message" rows="4" placeholder="Optional message..."></textarea>
 
-      <h5 class="mb-2"><i class="fas fa-paperclip"></i> Attachments (optional): </h5><h6><i class="fas fa-exclamation-triangle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</h6>
+      <h5 class="mb-2"><i class="fas fa-paperclip"></i> Attachments (optional): </h5><h6><i class="fas fa-exclamation-circle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</h6>
       <input type="file" name="attachments[]" class="form-control mb-3" multiple>
 
       <!-- CAPTCHA Section -->
@@ -207,7 +207,7 @@
             </div>
             <div class="modal-body">
               <!-- <p>Modal body text goes here.</p> -->
-              <div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>
+              <div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>
             </div>
             <!-- <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -15,7 +15,7 @@
   $quotation = $stmt->fetch();
 
   if (!$quotation) {
-    echo "<div class='container'><p class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Quotation not found.</p></div>";
+    echo "<div class='container'><p class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Quotation not found.</p></div>";
     include 'includes/footer.php';
     exit;
   }

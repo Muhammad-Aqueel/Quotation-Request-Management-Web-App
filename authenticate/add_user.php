@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php include 'includes/header.php'; if (isset($other_error)): ?>
-  <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($other_error) ?></div>
+  <div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($other_error) ?></div>
 <?php endif; ?>
 <h2 class="mb-4 mt-5 text-center"><i class="fas fa-user-plus"></i> Add New User</h2>
 <form method="post" class="border p-3 bg-light rounded shadow-sm m-auto col-md-8">

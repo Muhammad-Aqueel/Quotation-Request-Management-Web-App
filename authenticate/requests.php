@@ -10,7 +10,7 @@
     } else {
       echo ('<div class="container-fluid mt-4">
           <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
-              <div class="mb-0 alert alert-danger text-center">
+              <div class="mb-0 alert alert-warning text-center">
                   <h4 class="mb-0 text-center">
                       <i class="fas fa-exclamation-circle"></i> Invalid method.
                   </h4>
@@ -127,7 +127,7 @@
         </button>
       </div>
       <div class="mb-3">
-        <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-triangle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
+        <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-circle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
         <input type="file" name="attachments[]" class="form-control" multiple>
       </div>
       <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">

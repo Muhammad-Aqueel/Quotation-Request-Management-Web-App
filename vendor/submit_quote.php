@@ -10,7 +10,7 @@
         $captcha_value = $_POST['captcha_value'] ?? '';
 
         if ($captcha !== $captcha_value) {
-            echo "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>";
+            echo "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>";
             echo "<a href='quote.php?request_id=" . intval($_POST['request_id']) . "' class='btn btn-secondary mt-3'>Try Again</a>";
             header("Location: index.php");
         }
@@ -69,7 +69,7 @@
 
             if (!empty($result['skipped'])) {
                 if($result['skipped'][0]['reason'] !== "Upload error"){
-                    $file_skipped = '<div class="alert alert-warning"><h5><i class="fas fa-exclamation-triangle"></i> File(s) were skipped.</h5>';
+                    $file_skipped = '<div class="alert alert-warning"><h5><i class="fas fa-exclamation-circle"></i> File(s) were skipped.</h5>';
                     foreach ($result['skipped'] as $skip) {
                         $file_skipped .= '<h6><strong>' . htmlspecialchars($skip['name']) . '</strong>: ' . htmlspecialchars($skip['reason']) . '</h6>';
                     }

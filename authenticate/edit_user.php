@@ -16,7 +16,7 @@ $stmt->execute([$id]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    $no_user = "<div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> User not found.</div><a href='user_management.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a>";
+    $no_user = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> User not found.</div><a href='user_management.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a>";
 }
 
 // Handle form submission

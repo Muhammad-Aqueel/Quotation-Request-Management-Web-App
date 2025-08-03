@@ -10,7 +10,7 @@ if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
     echo ('
     <div class="container-fluid mt-4">
         <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
-            <div class="mb-0 alert alert-danger text-center">
+            <div class="mb-0 alert alert-warning text-center">
                 <h4 class="mb-0 text-center">
                     <i class="fas fa-exclamation-circle"></i> Invalid information.
                 </h4>
@@ -38,7 +38,7 @@ if (!$title || count($items) < 1) {
     echo ('
     <div class="container-fluid mt-4">
         <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
-            <div class="mb-0 alert alert-danger text-center">
+            <div class="mb-0 alert alert-warning text-center">
                 <h4 class="mb-0 text-center">
                     <i class="fas fa-exclamation-circle"></i> Title and at least one item required.
                 </h4>
@@ -68,7 +68,7 @@ foreach ($files['uploaded'] as $f) {
 $file_skipped = '';
 if (!empty($files['skipped'])) {
     if($files['skipped'][0]['reason'] !== "Upload error"){
-        $file_skipped = '<div class="alert alert-warning"><h5><i class="fas fa-exclamation-triangle"></i> File(s) were skipped.</h5>';
+        $file_skipped = '<div class="alert alert-warning"><h5><i class="fas fa-exclamation-circle"></i> File(s) were skipped.</h5>';
         foreach ($files['skipped'] as $skip) {
             $file_skipped .= '<h6><strong>' . htmlspecialchars($skip['name']) . '</strong>: ' . htmlspecialchars($skip['reason']) . '</h6>';
         }

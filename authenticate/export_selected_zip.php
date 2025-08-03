@@ -10,7 +10,7 @@
     echo ('
     <div class="container-fluid mt-4">
         <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
-            <div class="mb-0 alert alert-danger text-center">
+            <div class="mb-0 alert alert-warning text-center">
                 <h4 class="mb-0 text-center">
                     <i class="fas fa-exclamation-circle"></i> No quotations selected.
                 </h4>

@@ -9,7 +9,7 @@
   $request = $stmt->fetch();
 
   if (!$request) {
-    echo "<div class='container'><p class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</p><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
+    echo "<div class='container'><p class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Request not found.</p><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }

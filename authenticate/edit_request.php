@@ -15,7 +15,7 @@
   $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
 
   if (!$request) {
-      echo "<div class='container'><div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</div><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
+      echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Request not found.</div><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
       include 'includes/footer.php';
       exit;
   }
@@ -101,7 +101,7 @@
     </div>
 
     <div class="mb-3">
-      <label><i class="fas fa-paperclip"></i> New Attachments (optional):  <i class="fas fa-exclamation-triangle"></i> Only pdf, jpg, jpeg, png, docx and doc file formats allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
+      <label><i class="fas fa-paperclip"></i> New Attachments (optional):  <i class="fas fa-exclamation-circle"></i> Only pdf, jpg, jpeg, png, docx and doc file formats allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
       <input type="file" name="attachments[]" class="form-control" multiple>
     </div>
 

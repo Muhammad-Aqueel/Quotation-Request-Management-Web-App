@@ -12,7 +12,7 @@
             try {
                 $stmt = $pdo->prepare("INSERT INTO request_categories (name) VALUES (?)");
                 $stmt->execute([$name]);
-                $message = "<div class='alert alert-success'><i class='fas fa-exclamation-triangle'></i> Category added.</div>";
+                $message = "<div class='alert alert-success'><i class='fas fa-exclamation-circle'></i> Category added.</div>";
             } catch (PDOException $e) {
               if ($e->errorInfo[1] == 1062) {
                   // Optional: extract more if needed
@@ -21,7 +21,7 @@
                   $error = str_replace("name", "Category name", $error);
                   $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $error . "</div>";
                 } else {
-                  $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+                  $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
                 }
             }
         }
@@ -33,7 +33,7 @@
           $id = intval($_POST['delete_id']);
           $stmt = $pdo->prepare("DELETE FROM request_categories WHERE id = ?");
           $stmt->execute([$id]);
-          $message = "<div class='alert alert-info'><i class='fas fa-exclamation-triangle'></i>  Category deleted.</div>";
+          $message = "<div class='alert alert-info'><i class='fas fa-exclamation-circle'></i>  Category deleted.</div>";
         } catch (PDOException $e) {
           $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
         }

@@ -3,7 +3,7 @@
 
   $request_id = intval($_GET['request_id'] ?? 0);
   if (!$request_id) {
-    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No request selected.</div><a href='quotations.php?request_id=0' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
+    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> No request selected.</div><a href='quotations.php?request_id=0' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }
@@ -46,7 +46,7 @@
   }
 
   if(!$vendors){
-    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> Quotations not exist to compare.</div><a href='quotations.php?request_id=" . $request_id . "' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
+    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Quotations not exist to compare.</div><a href='quotations.php?request_id=" . $request_id . "' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }
@@ -106,7 +106,7 @@
       </tfoot>
     </table>
   </div>
-<?php else: echo "<div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No request selected.</div>"; ?>
+<?php else: echo "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> No request selected.</div>"; ?>
 <?php endif ?>
 
 <a href="quotations.php?request_id=<?= $request_id ?>" class="btn btn-secondary btn-sm mt-3">
