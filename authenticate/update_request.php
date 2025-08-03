@@ -9,6 +9,8 @@ $id = intval($_POST['id'] ?? 0); // request ID
 $title = trim($_POST['title'] ?? '');
 $category_id = trim($_POST['category_id'] ?? '');
 $description = trim($_POST['description'] ?? '');
+$society_id = trim($_POST['society_id'] ?? '');
+$eventdate = trim($_POST['eventdate'] ?? '');
 if(isset($_POST['item_id']) || isset($_POST['item_name']) || isset($_POST['quantity'])){
     $items_id = $_POST['item_id'] ?? [];
     $items = $_POST['item_name'] ?? [];
@@ -55,8 +57,8 @@ if (!$id || !$title ) {
 }
 
 // 1. Update request record
-$stmt = $pdo->prepare("UPDATE requests SET title = ?, category_id = ?, description = ? WHERE id = ?");
-$stmt->execute([$title, $category_id, $description, $id]);
+$stmt = $pdo->prepare("UPDATE requests SET title = ?, category_id = ?, description = ?,society_id = ?, event_date = ? WHERE id = ?");
+$stmt->execute([$title, $category_id, $description, $society_id, $eventdate, $id]);
 
 // 2. Update old items and insert new ones
 if(isset($_POST['item_id']) || isset($_POST['item_name']) || isset($_POST['quantity'])){

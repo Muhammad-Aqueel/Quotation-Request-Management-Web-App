@@ -6,7 +6,12 @@ require_admin();
 
 $id = intval($_GET['id'] ?? 0);
 if ($id) {
-  $pdo->prepare("DELETE FROM users WHERE id = ?")->execute([$id]);
+  try {
+    $pdo->prepare("DELETE FROM users WHERE id = ?")->execute([$id]);
+    $_SESSION['user_delete_message'] = '<div class="alert alert-success text-center"><h4 class="text-center"><i class="fa-solid fa-file-arrow-up"></i> User deleted successfully.</h4></div>';
+  } catch (PDOException $e) {
+    $_SESSION['user_delete_message'] = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+  }
 }
 
 header("Location: user_management.php");

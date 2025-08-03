@@ -103,7 +103,14 @@
     })
     .then(res => res.text())
     .then(html => {
-      document.getElementById("requestsList").innerHTML = html;
+      const container = document.getElementById("requestsList");
+      // Safely inject and then update theme
+      container.innerHTML = html;
+
+      // Defer to next tick to ensure DOM updates finish
+      requestAnimationFrame(() => {
+        updateThemeClasses();
+      });
     })
     .catch(() => {
       document.getElementById("requestsList").innerHTML = "<div class='alert alert-danger'>Failed to load.</div>";
@@ -123,6 +130,5 @@
     document.getElementById("toggleFilterBtn").classList.toggle("active");
   });
 </script>
-
 
 <?php include 'includes/footer.php'; ?>

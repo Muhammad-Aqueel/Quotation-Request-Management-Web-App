@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Login</title>
@@ -36,35 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/examples/sign-in/sign-in.css" rel="stylesheet">
     <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
-    <style>
-      /* Existing styles */
-      .theme_bg_color {
-        background-color: #903035 !important;
-      }
-      .theme_bg_color:hover {
-        background-color: #975155 !important;
-        border: 1px solid #975155 !important;
-      }
-      .theme_border_color {
-        border: 1px solid #903035 !important;
-      }
-      .form-signin input[type="text"] {
-        margin-bottom: -1px;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
-      }
-      /* Make the main container responsive and centered */
-      main.form-signin {
-        max-width: 400px;
-        width: 90%;
-        padding: 2rem;
-        /* border-radius: 8px; */
-        /* box-shadow: 0 4px 12px rgba(0,0,0,0.1); */
-      }
-    </style>
+    <link rel="stylesheet" href="../assets/css/main.css">
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
-    <main class="form-signin w-100 m-auto">
+    <main class="form-signin w-100 m-auto mt-3">
       <div class="text-center mb-4">
         <img src="../assets/images/favicon.png" alt="theme logo"width="80">
       </div>
@@ -87,10 +62,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-primary w-100 py-2 theme_border_color theme_bg_color">
           <i class="fas fa-arrow-right-to-bracket"></i> Login
         </button>
-        <p class="mt-3 mb-3 text-muted text-center">
-          © 2025
-        </p>
+        <div class="mt-3 mb-3 text-muted text-center small">
+            © 2025 &nbsp;|&nbsp; <i class="fas fa-calendar-day"></i> <?= date('d-M-Y') ?>
+        </div>
       </form>
     </main>
+    <footer class="text-center text-muted small py-3 mt-auto w-100 fixed-bottom d-flex align-items-center">
+        <div class="container">
+            &nbsp;
+        </div>
+        <div class="me-3">
+            <input type="checkbox" class="modeSwitch" id="modeSwitch">
+            <label for="modeSwitch" class="modeSwitch-label">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+                <span class="ball"></span>
+            </label>
+        </div>
+    </footer>
+    <script src="../assets/js/themeswitch.js"></script>
   </body>
 </html>

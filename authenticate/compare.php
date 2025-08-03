@@ -3,7 +3,7 @@
 
   $request_id = intval($_GET['request_id'] ?? 0);
   if (!$request_id) {
-    echo "<div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No request selected.</div><a href='quotations.php?request_id=0' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a>";
+    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> No request selected.</div><a href='quotations.php?request_id=0' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }
@@ -56,7 +56,7 @@
   <h2 class="mb-4"><i class="fas fa-scale-balanced"></i> Compare Quotations – <?= htmlspecialchars($request['title']) ?></h2>
 
   <div class="table-responsive">
-    <table class="table table-bordered align-middle table-sm">
+    <table class="table table-bordered align-middle table-sm table-striped">
       <thead>
         <tr class="table-light">
           <th>Item</th>

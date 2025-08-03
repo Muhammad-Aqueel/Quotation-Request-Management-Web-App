@@ -19,8 +19,13 @@
       </div>');
     }
   }
-  $stmt = $pdo->query("SELECT requests.*,request_categories.id as cat_id,request_categories.name as category_name FROM requests JOIN request_categories ON requests.category_id = request_categories.id ORDER BY created_at DESC");
-  $requests = $stmt->fetchAll();
+
+  if ($_SESSION['user_role'] === 'student'){
+    $requests = $pdo->query("SELECT requests.*,societies.id as soc_id,societies.society_name FROM requests JOIN societies ON requests.society_id = societies.id ORDER BY created_at DESC")->fetchAll();
+  } else {
+    $requests = $pdo->query("SELECT requests.*,societies.id as soc_id,societies.society_name FROM requests JOIN societies ON requests.society_id = societies.id WHERE requests.status = '0' ORDER BY created_at DESC")->fetchAll();
+  }
+
   if(isset($_SESSION['request_add_message'])){
     $msg = $_SESSION['request_add_message'];
   }
@@ -29,144 +34,215 @@
   $cats = $pdo->query("SELECT * FROM request_categories ORDER BY name")->fetchAll();
   // Fetch societies
   $socs = $pdo->query("SELECT * FROM societies ORDER BY society_name")->fetchAll();
+  // Fetch terms and conditions
+  $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
+  
+  if(isset($_POST['tandcedit'])){
+    $stmt = $pdo->prepare("UPDATE terms_and_conditions SET content=? WHERE id = 1");
+    $stmt->execute([$_POST['tandc']]);
+    $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
+  }
 ?>
 
-<div class="d-flex mb-3 align-items-center justify-content-between">
-  <h2><i class="fas fa-tasks"></i> Manage Requests</h2>
-  <div>
-    <a href="societies.php" class="btn btn-sm btn-outline-primary ">
-      <i class="fas fa-university"></i> Societies
-    </a>
-    <a href="request_category.php" class="btn btn-sm btn-outline-primary ">
-      <i class="fa-solid fa-layer-group"></i> Categories
-    </a>
-  </div>
-</div>
-
-<form action="add_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light mb-4 shadow-sm">
-  <h5><i class="fas fa-plus-circle"></i> Add New Request</h5>
-  <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
-  <div class="d-flex">
-    <div class="mb-2" style="flex-grow: 6;">
-      <input type="text" class="form-control" name="title" placeholder="Request Title" readonly required value="<?php
-        $latestId = isset($requests[0]) ? $requests[0]['id'] : null; // Last ID from database
-        $id = $latestId + 1; // Last ID + 1
-        $formatted_title = sprintf("PR%04d", $id);
-        echo $formatted_title; // Output e.g: PR0001
-      ?>" style="background: #e9e9e9;">
-    </div>
-    <div class="mb-3 ms-2" style="flex-grow: 2;">
-      <select name="society_id" class="form-select" required>
-        <option value="" disabled selected>Select Society</option>
-        <?php foreach ($socs as $soc): ?>
-          <option value="<?= $soc['id'] ?>"><?= htmlspecialchars($soc['society_name']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="mb-3 ms-2" style="flex-grow: 2;">
-      <select name="category_id" class="form-select" required>
-        <option value="" disabled selected>Select Category</option>
-        <?php foreach ($cats as $cat): ?>
-          <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-  </div>
-  <div class="mb-2">
-    <textarea name="description" class="form-control" placeholder="Description"></textarea>
-  </div>
-  <div class="mb-2">
-    <label><i class="fas fa-box"></i> Items</label>
-    <div id="items">
-      <div class="d-flex gap-2 mb-2 item-row">
-        <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" required>
-        <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity" required>
+<?php if ($_SESSION['user_role'] === 'student'): ?>
+  <div class="container">
+    <div class="d-flex mb-3 align-items-center justify-content-between">
+      <h2><i class="fas fa-tasks"></i> Manage Requests</h2>
+      <div>
+        <a href="societies.php" class="btn btn-sm btn-outline-primary ">
+          <i class="fas fa-university"></i> Societies
+        </a>
+        <a href="request_category.php" class="btn btn-sm btn-outline-primary ">
+          <i class="fa-solid fa-layer-group"></i> Categories
+        </a>
       </div>
     </div>
-    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addItem()">
-      <i class="fas fa-plus"></i> Add Item
-    </button>
+    
+    <form action="add_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light mb-4 shadow-sm">
+      <h5><i class="fas fa-plus-circle"></i> Add New Request</h5>
+      <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
+      <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
+        <div style="flex-grow: 6;">
+          <input type="text" class="form-control bg-body-secondary" name="title" placeholder="Request Title" readonly required value="<?php
+            $latestId = isset($requests[0]) ? $requests[0]['id'] : null; // Last ID from database
+            $id = $latestId + 1; // Last ID + 1
+            $formatted_title = sprintf("PR%04d", $id);
+            echo $formatted_title; // Output e.g: PR0001
+          ?>" >
+        </div>
+        <div style="flex-grow: 1;">
+          <input type="text" name="eventdate" id="date-range-picker" class="form-control" placeholder="From... to..." readonly>
+        </div>
+        <div style="flex-grow: 2;">
+          <select name="society_id" class="form-select" required>
+            <option value="" disabled selected>Select Society</option>
+            <?php foreach ($socs as $soc): ?>
+              <option value="<?= $soc['id'] ?>"><?= htmlspecialchars($soc['society_name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div style="flex-grow: 2;">
+          <select name="category_id" class="form-select" required>
+            <option value="" disabled selected>Select Category</option>
+            <?php foreach ($cats as $cat): ?>
+              <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      </div>
+      <div class="d-flex mb-2 row-gap-2 column-gap-2 flex-wrap">
+        <div style="flex-grow: 6;">
+          <textarea name="description" class="form-control" placeholder="Event" rows="1" required></textarea>
+        </div>
+        <div class="d-flex column-gap-2" style="flex-grow: 6;">
+          <div style="flex-grow: 6;">
+            <textarea name="tandc" class="form-control bg-body-secondary" placeholder="Terms and conditions" rows="1" readonly><?= $tandc[0]['content'] ?></textarea>
+          </div>
+          <button type="button" title="edit terms and conditions" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#tandcModal">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mb-2">
+        <label><i class="fas fa-box"></i> Items</label>
+        <div id="items">
+          <div class="d-flex gap-2 mb-2 item-row">
+            <label class="form-label my-auto item-index" style="width: 20px;">1</label>
+            <input type="text" name="item_name[]" class="form-control" placeholder="Item/description with specifications" required>
+            <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity/unit of measure" required>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addItem()">
+          <i class="fas fa-plus"></i> Add Item
+        </button>
+      </div>
+      <div class="mb-3">
+        <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-triangle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
+        <input type="file" name="attachments[]" class="form-control" multiple>
+      </div>
+      <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
+        <i class="fas fa-check-circle"></i> Create Request
+      </button>
+    </form>
   </div>
-  <div class="mb-3">
-    <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-triangle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
-    <input type="file" name="attachments[]" class="form-control" multiple>
-  </div>
-
-  <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
-    <i class="fas fa-check-circle"></i> Create Request
-  </button>
-</form>
-
+<?php endif; ?>
 <form method="post" action="bulk_request_action.php">
   <div class="d-flex flex-wrap justify-content-between align-items-baseline">
     <h5><i class="fas fa-list-ul"></i> Existing Requests</h5>
-    <div class="d-flex gap-2 mb-2">
-      <button type="button" class="btn border-light" disabled><i class="fa-solid fa-list-check"></i> Bulk</button>
-      <button type="submit" name="action" value="activate" class="btn btn-success btn-sm">
-        <i class="fas fa-toggle-on"></i> Activate
-      </button>
-      <button type="submit" name="action" value="deactivate" class="btn btn-secondary btn-sm">
-        <i class="fas fa-toggle-off"></i> Deactivate
-      </button>
-      <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm" onclick="return confirm('Delete permanently?')">
-        <i class="fas fa-trash-alt"></i> Delete
-      </button>  
-    </div>
+    <?php if ($_SESSION['user_role'] === 'student'): ?>
+      <div class="d-flex gap-2 mb-2">
+        <button type="button" class="btn border-0" disabled><i class="fa-solid fa-list-check"></i> Bulk</button>
+        <button type="submit" name="action" value="activate" class="btn btn-success btn-sm">
+          <i class="fas fa-toggle-on"></i> Open
+        </button>
+        <button type="submit" name="action" value="deactivate" class="btn btn-secondary btn-sm">
+          <i class="fas fa-toggle-off"></i> Close
+        </button>
+        <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm" onclick="return confirm('Delete permanently?')">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>  
+      </div>
+    <?php endif; ?>
   </div>
 
   <div class="table-responsive">
-    <table id="requestsTable" class="table table-bordered table-hover align-middle">
+    <table id="requestsTable" class="table table-bordered table-hover align-middle table-striped">
       <thead class="table-light">
         <tr>
           <th><input type="checkbox" onclick="toggleAll(this)" title="Select All"></th>
           <th><i class="fas fa-heading"></i> Title</th>
-          <th><i class="fas fa-layer-group"></i> Category</th>
-          <th><i class="fas fa-circle-info"></i> Description</th>
-          <th><i class="fas fa-calendar-alt"></i> Created</th>
-          <th><i class="fa-solid fa-user-gear"></i> Approval</th>
+          <th><i class="fas fa-university"></i> Society</th>
+          <th><i class="fas fa-circle-info"></i> Event name</th>
+          <th><i class="fas fa-calendar-alt"></i> Date</th>
+          <th title="View Quotations"><i class="fas fa-money-check-dollar"></i></th>
+          <th class="text-center"><i class="fa-solid fa-user-gear"></i>
+            <?php if ($_SESSION['user_role'] === 'student'): ?>
+              Approval &nbsp;<i class="fas fa-info-circle"></i> Status
+            <?php else: ?>
+              Approval
+            <?php endif; ?>
+          </th>
           <th><i class="fas fa-cogs"></i> Actions</th>
         </tr>
       </thead>
       <tbody>
         <?php foreach ($requests as $r): ?>
           <?php
-            $status = $r['approval_status'];
-            switch ($status) {
+            $astatus = $r['approval_status'];
+            switch ($astatus) {
               case 'Approved':
-                $badgeClass = 'bg-success';
+                $abadgeClass = 'bg-success';
                 break;
               case 'Rejected':
-                $badgeClass = 'text-dark bg-warning';
+                $abadgeClass = 'text-dark bg-warning';
                 break;
               case 'Pending':
               default:
-                $badgeClass = 'bg-secondary';
+                $abadgeClass = 'bg-secondary';
+                break;
+            }
+            $status = $r['status'];
+            switch ($status) {
+              case '0':
+                $sbadgeClass = 'bg-secondary';
+                $stext = 'Closed';
+                break;
+              case '1':
+              default:
+                $sbadgeClass = 'bg-success';
+                $stext = 'Open';
                 break;
             }
           ?>
           <tr>
             <td><input type="checkbox" name="request_ids[]" value="<?= $r['id'] ?>"></td>
             <td><?= htmlspecialchars($r['title']) ?></td>
-            <td><?= htmlspecialchars($r['category_name']) ?></td>
-            <td class="text-truncate" style="max-width: 250px;" title="<?= htmlspecialchars($r['description']) ?>"><?= htmlspecialchars($r['description']) ?></td>
-            <td><?= date('d-M-Y', strtotime($r['created_at'])) ?></td>
-            <td class="text-center"><span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($status) ?></span></td>
+            <td><?= htmlspecialchars($r['society_name']) ?></td>
+            <td class="text-truncate" style="max-width: 100px;" title="<?= htmlspecialchars($r['description']) ?>"><?= htmlspecialchars($r['description']) ?></td>
+            <td class="text-truncate" style="max-width: 100px;" title="<?= htmlspecialchars($r['event_date']) ?>"><?= $r['event_date'] ?></td>
+            <td class="text-center" title="View Quotations">
+                <a href="quotations.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-info" target="_blank">
+                  <i class="fas fa-eye"></i>
+                </a>
+            </td>
             <td class="text-center">
-              <?php if($r['status'] == '1'): ?>
-                <a href="requests.php?id=<?= $r['id'] ?>&status=0" class="btn btn-sm btn-secondary">
-                  <i class="fa-solid fa-eye-slash"></i> Deactivate
-                </a>
-                <a href="edit_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i> Edit
-                </a>
+              <span class="badge <?= $abadgeClass ?>"><?= htmlspecialchars($astatus) ?></span>
+              <?php if ($_SESSION['user_role'] === 'student'): ?>
+                &nbsp;
+                <span class="badge <?= $sbadgeClass ?>"><?= $stext ?></span>
+              <?php endif; ?>
+            </td>
+            <td class="text-center">
+              <?php if ($_SESSION['user_role'] === 'student'): ?>
+                <?php if($r['status'] == '1'): ?>
+                  <a href="requests.php?id=<?= $r['id'] ?>&status=0" class="btn btn-sm btn-secondary" title="Close Request">
+                    <i class="fa-solid fa-eye-slash"></i>
+                  </a>
+                  <a href="edit_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-warning" title="Edit Request">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                <?php else: ?>
+                  <a href="requests.php?id=<?= $r['id'] ?>&status=1" class="btn btn-sm btn-success" title="Open Request">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <?php endif; ?>
+                  <a href="delete_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this request?')" title="Delete Request">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
               <?php else: ?>
-                <a href="requests.php?id=<?= $r['id'] ?>&status=1" class="btn btn-sm btn-success">
-                  <i class="fas fa-eye"></i> Active
+                <a href="request_approval.php?id=<?= $r['id'] ?>&set=Pending" class="btn btn-sm btn-secondary" title="Pending Request">
+                  <i class="fas fa-question-circle"></i>
+                </a>
+                <a href="request_approval.php?id=<?= $r['id'] ?>&set=Approved" class="btn btn-sm btn-success" title="Approve Request">
+                  <i class="fas fa-check-circle"></i>
+                </a>
+                <a href="request_approval.php?id=<?= $r['id'] ?>&set=Rejected" class="btn btn-sm btn-warning" title="Reject Request">
+                  <i class="fas fa-times-circle"></i>
                 </a>
               <?php endif; ?>
-              <a href="delete_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this request?')">
-                <i class="fas fa-trash-alt"></i> Delete
-              </a>
+                <a href="view_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-info" title="View Request">
+                  <i class="fas fa-eye"></i>
+                </a>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -199,27 +275,55 @@
   </div>
 <?php unset($_SESSION['request_add_message']); endif; ?>
 
-<script>
-  function addItem() {
-    const row = document.createElement('div');
-    row.className = 'd-flex gap-2 mb-2 item-row';
-    row.innerHTML = `
-      <input type="text" name="item_name[]" class="form-control" placeholder="Item Name" required>
-      <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity" required>
-      <button type="button" title="Delete Item" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
-        <i class="fas fa-trash-alt"></i></button>
-    `;
-    document.getElementById('items').appendChild(row);
-  }
-
-  function removeItem(btn) {
-    const container = document.getElementById('items');
-    if (container.children.length > 1) {
-      btn.parentElement.remove();
-    } else {
-      alert("At least one item is required.");
+<div class="container-fluid">
+  <div class="modal fade" id="tandcModal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-edit"></i> Terms and Conditions</h5>
+          <button type="button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+          <div class="modal-body">
+            <!-- Modal body goes here.-->
+            <div class="mb-2">
+              <textarea name="tandc" class="form-control" placeholder="Terms and conditions" rows="5"><?= $tandc[0]['content'] ?></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" name="tandcedit" class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-save"></i> Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<?php if ($_SESSION['user_role'] === 'student'): ?>
+  <script>
+    function addItem() {
+      const row = document.createElement('div');
+      row.className = 'd-flex gap-2 mb-2 item-row';
+      row.innerHTML = `
+        <label class="form-label my-auto item-index" style="width: 20px;"></label>
+        <input type="text" name="item_name[]" class="form-control" placeholder="Item/description with specifications" required>
+        <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity/unit of measure" required>
+        <button type="button" title="Delete Item" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
+          <i class="fas fa-trash-alt"></i></button>
+      `;
+      document.getElementById('items').appendChild(row);
+      updateSerialNumbers();
     }
-  }
-</script>
 
+    function removeItem(btn) {
+      const container = document.getElementById('items');
+      if (container.children.length > 1) {
+        btn.parentElement.remove();
+        updateSerialNumbers();
+      } else {
+        alert("At least one item is required.");
+      }
+    }
+  </script>
+<?php endif; ?>
 <?php include 'includes/footer.php'; ?>

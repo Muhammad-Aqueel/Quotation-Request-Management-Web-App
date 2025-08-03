@@ -23,27 +23,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h2 class="mb-4 mt-5 text-center"><i class="fas fa-user-cog"></i> Admin Profile</h2>
-
-<form method="post" class="border p-3 rounded bg-light m-auto shadow-sm col-md-6">
-  <div class="mb-3">
-    <label class="form-label"><i class="fas fa-user"></i> Username</label>
-    <input type="text" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" disabled>
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
-    <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label"><i class="fas fa-lock"></i> New Password <small class="text-muted">(leave empty to keep current)</small></label>
-    <input type="password" class="form-control" name="password">
-  </div>
-
-  <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
-    <i class="fas fa-save"></i> Save Changes
-  </button>
-</form>
+<div class="container">
+  <h2 class="mb-4 mt-5 text-center"><i class="fas fa-user-cog"></i> Admin Profile</h2>
+  <form method="post" class="border p-3 rounded bg-light m-auto shadow-sm col-md-6">
+    <div class="mb-3">
+      <label class="form-label"><i class="fas fa-user"></i> Username</label>
+      <input type="text" class="form-control" value="<?= htmlspecialchars($user['username']) ?>" disabled>
+    </div>
+    <div class="mb-3">
+      <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+      <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label"><i class="fas fa-lock"></i> New Password <small class="text-muted">(leave empty to keep current)</small></label>
+      <input type="password" class="form-control" name="password" placeholder="Enter new password">
+    </div>
+    <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
+      <i class="fas fa-save"></i> Save Changes
+    </button>
+  </form>
+</div>
 
 <?php include 'includes/footer.php'; ?>

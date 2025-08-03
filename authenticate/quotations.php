@@ -37,7 +37,18 @@
   $stmt->execute($params);
   $quotations = $stmt->fetchAll();
 
-  $requests = $pdo->query("SELECT * FROM requests")->fetchAll();
+  if ($_SESSION['user_role'] === 'student'){
+    $requests = $pdo->query("SELECT * FROM requests")->fetchAll();
+  } else {
+    $requests = $pdo->query("SELECT * FROM requests WHERE status = '0'")->fetchAll();
+  }
+
+  if (isset($_GET['request_id']) && intval($_GET['request_id']))
+  $sql = "SELECT COUNT(CASE WHEN q.status = 'Deleted' THEN 1 END) AS deleted_count, COUNT(CASE WHEN q.status != 'Deleted' AND q.is_read = 0 THEN 1 END) AS unread_count FROM quotations q JOIN vendors v ON q.vendor_id = v.id WHERE q.request_id = ?";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($params);
+  $del_unread_count = $stmt->fetchAll();
+
 ?>
 
 <h2 class="mb-4"><i class="fas fa-money-check-dollar"></i> Quotations</h2>
@@ -81,14 +92,16 @@
 
       <input type="radio" class="btn-check" name="filter" value="unread" id="filter-unread" autocomplete="off"
              onchange="this.form.submit()" <?= $active_filter === 'unread' ? 'checked' : '' ?>>
-      <label class="<?= $active_filter === 'unread' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?>" for="filter-unread">
+      <label class="<?= $active_filter === 'unread' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?> position-relative" for="filter-unread">
         <i class="fas fa-envelope-open-text"></i> Unread
+        <?php if (isset($_GET['request_id']) && intval($_GET['request_id'])):?><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color theme_bg_color"><?= $del_unread_count[0]['unread_count'] ?></span><?php endif; ?>
       </label>
 
       <input type="radio" class="btn-check" name="filter" value="bin" id="filter-bin" autocomplete="off"
              onchange="this.form.submit()" <?= $active_filter === 'bin' ? 'checked' : '' ?>>
-      <label class="<?= $active_filter === 'bin' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?>" for="filter-bin">
+      <label class="<?= $active_filter === 'bin' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?> position-relative" for="filter-bin">
         <i class="fas fa-trash-alt"></i> Recycle Bin
+        <?php if (isset($_GET['request_id']) && intval($_GET['request_id'])):?><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color theme_bg_color"><?= $del_unread_count[0]['deleted_count'] ?></span><?php endif; ?>
       </label>
     </nav>
 
@@ -108,7 +121,7 @@
   <form method="post" action="bulk_quotation_action.php">
     <input type="hidden" name="request_id" value="<?= $request_id ?>">
     <div class="my-2 d-flex gap-2 justify-content-end">
-      <button type="button" class="btn border-light" disabled><i class="fa-solid fa-list-check"></i> Bulk</button>
+      <button type="button" class="btn border-0" disabled><i class="fa-solid fa-list-check"></i> Bulk</button>
       <?php if (!$in_bin): ?>
         <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">
           <i class="fas fa-check-circle"></i> Approve
@@ -130,7 +143,7 @@
       <?php endif; ?>
     </div>
     <div class="table-responsive">
-      <table id="requestsTable" class="table table-bordered table-hover align-middle">
+      <table id="requestsTable" class="table table-bordered table-hover align-middle table-striped">
         <thead class="table-light">
           <tr>
             <?php //if (!$in_bin): ?>
@@ -139,7 +152,7 @@
             <th><i class="fas fa-user"></i> Vendor</th>
             <th><i class="fas fa-building"></i> Company</th>
             <th><i class="fas fa-money-bill-wave"></i> Total</th>
-            <th><i class="fas fa-tag"></i> Status</th>
+            <th><i class="fas fa-info-circle"></i> Status</th>
             <th><i class="fas fa-cogs"></i> Actions</th>
           </tr>
         </thead>
@@ -180,20 +193,20 @@
                   <i class="fas fa-eye"></i> View
                 </a>
                 <?php if ($q['status'] === 'Deleted'): ?>
-                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Pending" class="btn btn-sm btn-success">
+                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Pending&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success">
                     <i class="fas fa-undo"></i> Restore
                   </a>
                   <a href="permanent_delete_quotation.php?id=<?= $q['id'] ?>&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete permanently?')">
                     <i class="fas fa-fire"></i> Delete
                   </a>
                 <?php else: ?>
-                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Approved" class="btn btn-sm btn-success">
+                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Approved&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success">
                     <i class="fas fa-check-circle"></i> Approve
                   </a>
-                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Rejected" class="btn btn-sm btn-warning">
+                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Rejected&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-warning">
                     <i class="fas fa-times-circle"></i> Reject
                   </a>
-                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Deleted" class="btn btn-sm btn-danger">
+                  <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Deleted&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger">
                     <i class="fas fa-trash-alt"></i> Recycle
                   </a>
                 <?php endif; ?>

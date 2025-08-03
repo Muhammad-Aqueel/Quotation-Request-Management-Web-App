@@ -57,7 +57,7 @@
       $stmt->execute([$id]);
       $q = $stmt->fetch();
 
-      $stmt = $pdo->prepare("SELECT requests.*,request_categories.id as cat_id,request_categories.name as category_name FROM requests JOIN request_categories ON requests.category_id = request_categories.id WHERE requests.id = ?");
+      $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ?");
       $stmt->execute([$q['request_id']]);
       $request = $stmt->fetch();
 
@@ -80,10 +80,12 @@
 
       // Build HTML
       $html = "<h2>Request Title: {$request['title']}</h2>";
-      $html .= "<p><strong>Request Category:</strong> {$request['category_name']}</p>";
-      $html .= "<p><strong>Description:</strong> {$request['description']}</p>";
+      $html .= "<h4><strong>Event:</strong> {$request['description']}</h4>";
+      $html .= "<strong>Event Date:</strong> {$request['event_date']}<br>";
+      $html .= "<strong>Society:</strong> {$request['society_name']}<br>";
+      $html .= "<strong>Category:</strong> {$request['category_name']}<br>";
       // $html .= "<h4>Quotation #{$q['id']}</h4>";
-      $html .= "<h4>Quotation #{$quote_serial['serial_number']}</h4>";
+      $html .= "<h4>Quotation # {$quote_serial['serial_number']}</h4>";
       $html .= "<strong>Vendor Name:</strong> {$q['name']}<br>";
       $html .= "<strong>Company:</strong> {$q['company']}<br>";
       $html .= "<strong>NTN:</strong> {$q['ntn']}<br>";

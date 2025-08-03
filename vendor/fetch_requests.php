@@ -30,7 +30,7 @@ $requests = $stmt->fetchAll();
 if ($requests):
   foreach ($requests as $r): if($r['status'] == '1'): ?>
     <div class="col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm" style="background: #ffffffcc;backdrop-filter: blur(5px);">
+      <div class="card h-100 shadow-sm bg-light" style="--bs-bg-opacity: .7;backdrop-filter: blur(5px);">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-clipboard-list nav_active_link"></i> <?= htmlspecialchars($r['title']) ?></h5>
             <h6><?= htmlspecialchars($r['category_name']) ?></h6>

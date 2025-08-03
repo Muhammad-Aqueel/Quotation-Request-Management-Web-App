@@ -1,0 +1,179 @@
+.form-check-input {
+  background-color: #ffffff;
+  border-color: #979797;
+}
+.form-check-input:checked {
+  background-color: #903035;
+  border-color: #903035;
+}
+.nav_active_link{
+  color: #903035 !important;
+}
+.theme_bg_color{
+  background-color : #903035 !important;
+}
+.theme_bg_color:hover{
+  background-color : #975155 !important;
+  border: 1px solid #975155 !important;
+}
+.theme_border_color{
+  border: 1px solid #903035 !important;
+}
+.theme_outline_btn_color{
+  border: 1px solid #903035 !important;
+  color: #903035 !important;
+  background-color: white;
+}
+.theme_outline_btn_color:hover{
+  background-color : #903035 !important;
+  border: 1px solid #903035 !important;
+  color: #fff !important;
+  box-shadow: 0px 0px 10px #6c0006cc;
+}
+body {
+  font-family: 'Inter', sans-serif;
+}
+.nav-link .fas{
+  font-size: 24px;
+  margin-bottom: 0.5rem!important;
+}
+.navbar .nav-link, .nav-link #quoteBell{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bg-img{
+  background-image: url('../../../assets/images/favicon.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-width: 100%;
+  position: fixed;
+  min-height: 100%;
+  z-index: -1;
+  opacity: .3;
+}
+@media (max-width: 767px) {
+  picture img {
+    width: 50px !important;
+  }
+}
+/* Sidebar widget styling */
+.filter-sidebar {
+  position: fixed;
+  top: 150px;
+  right: -336px;
+  width: 320px;
+  /* height: calc(100vh - 100px); */
+  /* background: #fff; */
+  transition: right 0.3s ease-in-out;
+  z-index: 1050;
+  /* border-left: 1px solid #ddd; */
+  border-radius: 6px 0px 0px 6px;
+  /* box-shadow: -2px 0 5px rgb(0 0 0 / 10%); */
+}
+
+/* When active (slide in) */
+.filter-sidebar.active {
+  right: -1px;
+}
+
+/* Toggle Button styling */
+.toggle-filter-btn {
+  position: fixed;
+  top: 100px;
+  right: -42px;
+  z-index: 1060;
+  padding: 8px 12px;
+  border-radius: 4px 0 0 4px;
+  transition: right 0.3s ease-in-out;
+}
+
+/* When active (slide in) */
+.toggle-filter-btn.active {
+  right: 0px;
+}
+
+.modeSwitch {
+  opacity: 0;
+  position: absolute;
+}
+
+.modeSwitch-label {
+  background-color: #000000;
+  width: 50px;
+  height: 26px;
+  border-radius: 50px;
+  position: relative;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modeSwitch:checked + .modeSwitch-label {
+  background-color: #000000;
+}
+
+.fa-moon {color: #fff;}
+
+.fa-sun {color: #ff9900;}
+
+.modeSwitch-label .ball {
+  background-color: #fff;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  transition: transform 0.2s linear;
+}
+
+.modeSwitch:checked + .modeSwitch-label .ball {
+  transform: translateX(24px);
+}
+
+/* Base scrollbar styling for WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--bs-body-bg); /* Matches the body background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--bs-border-color-translucent);
+  border-radius: 4px;
+}
+
+/* On hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bs-secondary-color);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bs-border-color-translucent) var(--bs-body-bg);
+}
+/* Light mode */
+[data-bs-theme="light"] * {
+  scrollbar-color: #9030358a transparent;
+}
+
+/* Dark mode */
+[data-bs-theme="dark"] * {
+  scrollbar-color: #9030358a transparent;
+}
+
+[data-bs-theme="light"] ::-webkit-scrollbar-thumb {
+  background-color: #9030358a;
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+  background-color: #9030358a;
+}

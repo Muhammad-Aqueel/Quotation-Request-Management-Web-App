@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS requests (
   user_id int,
   society_id INT,
   description TEXT,
+  event_date VARCHAR(100),
   status ENUM('0','1') NOT NULL,
   approval_status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -95,6 +96,12 @@ CREATE TABLE IF NOT EXISTS quotation_attachments (
   filename VARCHAR(255),
   filepath TEXT,
   FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE
+);
+
+-- terms_and_conditions
+CREATE TABLE IF NOT EXISTS terms_and_conditions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  content TEXT NOT NULL
 );
 
 -- Request_items trigger after quantity changes

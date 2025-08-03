@@ -13,7 +13,8 @@
 
   $ids = array_map('intval', $ids);
   $id_placeholders = implode(',', array_fill(0, count($ids), '?'));
-
+echo $id_placeholders . "<br>";
+print_r($ids);
   switch ($action) {
     // cascade deletes due to foreign key constraints, if cascade delete not applied then uncomment all SQL code lines below
     case 'delete':
@@ -52,11 +53,11 @@
       break;
 
     case 'activate':
-      $pdo->prepare("UPDATE requests SET status = 1 WHERE id IN ($id_placeholders)")->execute($ids);
+      $pdo->prepare("UPDATE requests SET status = '1' WHERE id IN ($id_placeholders)")->execute($ids);
       break;
 
     case 'deactivate':
-      $pdo->prepare("UPDATE requests SET status = 0 WHERE id IN ($id_placeholders)")->execute($ids);
+      $pdo->prepare("UPDATE requests SET status = '0' WHERE id IN ($id_placeholders)")->execute($ids);
       break;
 
     default:

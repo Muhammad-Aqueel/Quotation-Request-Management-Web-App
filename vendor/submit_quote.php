@@ -85,6 +85,8 @@
             $_SESSION['quote_submit_message'] = '<div class="alert alert-danger text-center"><h4 class="text-center"><i class="fa-solid fa-triangle-exclamation"></i></i> Quotation submission failed: </h4>' . htmlspecialchars($e->getMessage()) . '</div>';
             header("Location: index.php");
         }
+    } else {
+        header("Location: index.php");
     }
 
     // include 'includes/footer.php';
