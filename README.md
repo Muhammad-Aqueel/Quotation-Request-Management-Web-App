@@ -41,8 +41,8 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 - Three roles: Admin, Student and OSAS
 
 ### Theme
-- Light/Dark Mode Toggle: Users can switch between light and dark themes.
-- Persistent Theme Preference: The user's selected theme is saved (e.g., in local storage) and reapplied automatically the next time they visit.
+- **Light/Dark Mode Toggle:** Users can switch between light and dark themes.
+- **Persistent Theme Preference:** The user's selected theme is saved (e.g., in local storage) and reapplied automatically the next time they visit.
 
 ### Future Features
 - Vendors data operations page
