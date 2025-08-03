@@ -143,3 +143,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+window.addEventListener('DOMContentLoaded', function () {
+    const observer = new MutationObserver(function () {
+        const datepicker = document.querySelector('.air-datepicker');
+        if (datepicker && !datepicker.classList.contains('bg-body')) {
+            datepicker.classList.add('bg-body', 'text-body');
+        }
+    });
+
+    // Observe changes in the document body (e.g., air-datepicker being inserted)
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});

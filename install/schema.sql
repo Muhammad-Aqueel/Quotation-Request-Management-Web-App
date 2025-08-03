@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS terms_and_conditions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   content TEXT NOT NULL
 );
+INSERT INTO `terms_and_conditions` (`content`) SELECT 'Terms and conditions...' WHERE NOT EXISTS ( SELECT 1 FROM `terms_and_conditions` );
 
 -- Request_items trigger after quantity changes
 CREATE TRIGGER IF NOT EXISTS trg_update_total_on_quantity_change

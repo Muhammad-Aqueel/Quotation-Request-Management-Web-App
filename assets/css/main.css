@@ -192,3 +192,23 @@ main.form-signin {
 .dropdown-item:active {
   background-color: #220000;
 }
+
+[data-bs-theme="dark"] .air-datepicker--pointer:after {
+  background: #212529;
+}
+
+[data-bs-theme="dark"] .air-datepicker-cell.-year-.-other-decade-,[data-bs-theme="dark"] .air-datepicker-cell.-day-.-other-month- {
+  color: #dedede66;
+}
+
+[data-bs-theme="dark"] .air-datepicker-nav--title:hover,[data-bs-theme="dark"] .air-datepicker-cell:hover {
+  background: #2b3035;
+}
+
+.air-datepicker-cell.-current- {
+  font-weight: bold;
+}
+
+[data-bs-theme="dark"] .air-datepicker-cell.-current-:hover {
+  color: #000000;
+}
