@@ -5,6 +5,14 @@
 
     $id = intval($_GET['id'] ?? 0);
 
+    $stmt = $pdo->prepare("SELECT * FROM requests WHERE requests.id = ? AND user_id = ?");
+    $stmt->execute([$id,$_SESSION['user_id']]);
+    $request = $stmt->fetch();
+
+    if (!$request) {
+        header("Location: requests.php");
+        exit;
+    }
     // cascade deletes due to foreign key constraints, if cascade delete not applied then uncomment all SQL code lines below
     if ($id) {
         // Delete request attachments (and files)

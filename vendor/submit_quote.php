@@ -10,7 +10,7 @@
         $captcha_value = $_POST['captcha_value'] ?? '';
 
         if ($captcha !== $captcha_value) {
-            echo "<div class='alert alert-danger'><i class='fas fa-ban'></i> CAPTCHA verification failed.</div>";
+            echo "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>";
             echo "<a href='quote.php?request_id=" . intval($_POST['request_id']) . "' class='btn btn-secondary mt-3'>Try Again</a>";
             header("Location: index.php");
         }

@@ -2,7 +2,7 @@
     <!-- Place this outside the container (for full width) -->
     <footer class="bg-light text-center text-muted small py-3 mt-auto shadow-lg w-100 fixed-bottom d-flex align-items-center">
         <div class="container">
-            © 2025 &nbsp;|&nbsp; <i class="fas fa-calendar-day"></i> <?= date('d-M-Y') ?>
+            © 2025 &nbsp;|&nbsp; <i class="fas fa-calendar-day"></i> <?php date_default_timezone_set('Asia/Karachi'); echo date('d-M-Y'); ?>
         </div>
         <div class="me-3">
             <input type="checkbox" class="modeSwitch" id="modeSwitch">

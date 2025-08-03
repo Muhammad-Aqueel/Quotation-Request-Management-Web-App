@@ -4,16 +4,16 @@
   $id = intval($_GET['id'] ?? 0);
   
   // Fetch full request details
-  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ?");
-  $stmt->execute([$id]);
+  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ? AND user_id = ?");
+  $stmt->execute([$id,$_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   if (!$request) {
-    echo "<div class='container'><p class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</p></div>";
+    echo "<div class='container'><p class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</p><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }
-  
+
   $stmt = $pdo->prepare("SELECT * FROM request_items WHERE request_id = ?");
   $stmt->execute([$id]);
   $items = $stmt->fetchAll();
@@ -149,7 +149,7 @@
             <?php endforeach; ?>
           </ul>
         <?php else: ?>
-          <p class="text-muted"><i class="fas fa-ban"></i> No attachments.</p>
+          <p class="text-muted"><i class="fas fa-exclamation-circle"></i> No attachments.</p>
         <?php endif; ?>
         </div>
       </div>

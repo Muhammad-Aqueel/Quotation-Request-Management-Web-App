@@ -36,9 +36,11 @@
   $stmt = $pdo->prepare($sql);
   $stmt->execute($params);
   $quotations = $stmt->fetchAll();
-
+  
   if ($_SESSION['user_role'] === 'student'){
-    $requests = $pdo->query("SELECT * FROM requests")->fetchAll();
+    $stmt = $pdo->prepare("SELECT * FROM requests WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $requests = $stmt->fetchAll();    
   } else {
     $requests = $pdo->query("SELECT * FROM requests WHERE status = '0'")->fetchAll();
   }
@@ -229,7 +231,7 @@
   </form>
 <?php elseif ($request_id): ?>
   <div class="mt-3 text-center">
-    <p class="text-muted"><i class="fas fa-ban"></i> 
+    <p class="text-muted"><i class="fas fa-exclamation-circle"></i> 
       <?php if($in_bin) : ?>
         No quotation sended for this request to recycle bin.
       <?php elseif ($is_unread_filter): ?>

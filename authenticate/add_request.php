@@ -6,67 +6,38 @@ require_login();
 require_once 'includes/functions.php';
 
 if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-    die('<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>Add Request</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Font Awesome CDN -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-      <!-- Bootstrap CSS -->
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
-      <style>
-        a{
-          text-decoration: none;
-        }
-      </style>
-    </head>
-    <body class="bg-light">
+    include 'includes/header.php';
+    echo ('
     <div class="container-fluid mt-4">
-        <div class="col-6 m-auto bg-white p-4 shadow-sm rounded">
+        <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
             <div class="mb-0 alert alert-danger text-center">
                 <h4 class="mb-0 text-center">
-                    <i class="fas fa-ban"></i> Invalid information.
+                    <i class="fas fa-exclamation-circle"></i> Invalid information.
                 </h4>
             </div>
             <a href="requests.php" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
-    </div>
-    </body>
-    </html>');
+    </div>');
+    include 'includes/footer.php';
+    exit;
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $title = trim($_POST['title']);
     $category_id = trim($_POST['category_id']);
+    $user_id = trim($_POST['user_id']);
+    $eventdate = trim($_POST['eventdate']);
+    $society_id = trim($_POST['society_id']);
     $desc = trim($_POST['description']);
     $items = $_POST['item_name'] ?? [];
     $quantities = $_POST['quantity'] ?? [];
 }
 
 if (!$title || count($items) < 1) {
-    die('<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>Add Request</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Font Awesome CDN -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-      <!-- Bootstrap CSS -->
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
-      <style>
-        a{
-          text-decoration: none;
-        }
-      </style>
-    </head>
-    <body class="bg-light">
+    include 'includes/header.php';
+    echo ('
     <div class="container-fluid mt-4">
-        <div class="col-6 m-auto bg-white p-4 shadow-sm rounded">
+        <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
             <div class="mb-0 alert alert-danger text-center">
                 <h4 class="mb-0 text-center">
                     <i class="fas fa-exclamation-circle"></i> Title and at least one item required.
@@ -74,13 +45,13 @@ if (!$title || count($items) < 1) {
             </div>
             <a href="requests.php" class="btn btn-secondary btn-sm mt-3"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
-    </div>
-    </body>
-    </html>');
+    </div>');
+    include 'includes/footer.php';
+    exit;
 }
 
-$stmt = $pdo->prepare("INSERT INTO requests (title, category_id, description, status) VALUES (?, ?, ?, ?)");
-$stmt->execute([$title, $category_id, $desc, '1']);
+$stmt = $pdo->prepare("INSERT INTO requests (title, category_id, description, user_id, society_id, event_date, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->execute([$title, $category_id, $desc, $user_id, $society_id, $eventdate, '1']);
 $request_id = $pdo->lastInsertId();
 
 for ($i = 0; $i < count($items); $i++) {

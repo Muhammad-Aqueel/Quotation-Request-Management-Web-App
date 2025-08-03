@@ -6,6 +6,15 @@
     $id = intval($_GET['id']);
     $request_id = intval($_GET['request_id']);
 
+    $stmt = $pdo->prepare("SELECT * FROM requests WHERE id = ? AND user_id = ?");
+    $stmt->execute([$request_id, $_SESSION['user_id']]);
+    $request = $stmt->fetch();
+  
+    if (!$request) {
+        header("Location: quotations.php?request_id=$request_id");
+        exit;
+    }
+
     // cascade deletes due to foreign key constraints, if cascade delete not applied then uncomment all SQL code lines below
     if ($id) {
         // Delete related attachments

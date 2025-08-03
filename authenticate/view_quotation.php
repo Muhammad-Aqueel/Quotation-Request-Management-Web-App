@@ -20,9 +20,14 @@
     exit;
   }
   
-  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ?");
-  $stmt->execute([$quotation ['request_id']]);
+  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ? AND user_id = ?");
+  $stmt->execute([$quotation ['request_id'], $_SESSION['user_id']]);
   $request = $stmt->fetch();
+
+  if (!$request) {
+      header("Location: quotations.php");
+      exit;
+  }
 
   // Mark as read
   $pdo->prepare("UPDATE quotations SET is_read = 1 WHERE id = ?")->execute([$id]);
@@ -188,7 +193,7 @@
             <?php endforeach; ?>
           </ul>
         <?php else: ?>
-          <p class="text-muted"><i class="fas fa-ban"></i> No attachments.</p>
+          <p class="text-muted"><i class="fas fa-exclamation-circle"></i> No attachments.</p>
         <?php endif; ?>
         </div>
       </div>

@@ -3,8 +3,8 @@
   require_once 'includes/csrf.php';
 
   $id = intval($_GET['id'] ?? 0);
-  $stmt = $pdo->prepare("SELECT * FROM requests WHERE requests.id = ?");
-  $stmt->execute([$id]);
+  $stmt = $pdo->prepare("SELECT * FROM requests WHERE requests.id = ? AND user_id = ?");
+  $stmt->execute([$id,$_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   // Fetch categories
@@ -15,7 +15,7 @@
   $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
 
   if (!$request) {
-      echo "<div class='container'><div class='alert alert-danger'><i class='fas fa-ban'></i> Request not found.</div></div>";
+      echo "<div class='container'><div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</div><a href='requests.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
       include 'includes/footer.php';
       exit;
   }

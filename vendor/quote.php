@@ -14,7 +14,7 @@
   $request = $stmt->fetch();
 
   if (!$request) {
-    echo "<div class='alert alert-danger'><i class='fas fa-ban'></i> Request not found.</div>";
+    echo "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Request not found.</div>";
     include 'includes/footer.php';
     exit;
   }
@@ -71,7 +71,7 @@
             <?php endforeach; ?>
           </ul>
         <?php else: ?>
-          <p class="text-muted"><i class="fas fa-ban"></i> No attachments.</p>
+          <p class="text-muted"><i class="fas fa-exclamation-circle"></i> No attachments.</p>
         <?php endif; ?>
         </div>
       </div>
@@ -207,7 +207,7 @@
             </div>
             <div class="modal-body">
               <!-- <p>Modal body text goes here.</p> -->
-              <div class='alert alert-danger'><i class='fas fa-ban'></i> CAPTCHA verification failed.</div>
+              <div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> CAPTCHA verification failed.</div>
             </div>
             <!-- <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

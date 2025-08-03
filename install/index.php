@@ -51,7 +51,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="container col-md-8 mt-5 bg-white p-4 shadow-sm rounded">
+<div class="container col-md-8 mt-5 bg-body p-4 shadow-sm rounded">
   <h3 class="mb-4 text-center"><i class="fas fa-cogs text-primary"></i> App Installer</h3>
 
   <?php if (isset($success)): ?>

@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <i class="fas fa-arrow-right-to-bracket"></i> Login
         </button>
         <div class="mt-3 mb-3 text-muted text-center small">
-            © 2025 &nbsp;|&nbsp; <i class="fas fa-calendar-day"></i> <?= date('d-M-Y') ?>
+            © 2025 &nbsp;|&nbsp; <i class="fas fa-calendar-day"></i> <?php date_default_timezone_set('Asia/Karachi'); echo date('d-M-Y'); ?>
         </div>
       </form>
     </main>

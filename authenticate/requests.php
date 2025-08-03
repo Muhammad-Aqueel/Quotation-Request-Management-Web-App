@@ -5,23 +5,32 @@
   if(isset($_GET['id']) && isset($_GET['status'])){
     if($_GET['status'] == 0 || $_GET['status'] == 1){
       // Update request status
-      $stmt = $pdo->prepare("UPDATE requests SET status = ? WHERE id = ?");
-      $stmt->execute([$_GET['status'], $_GET['id']]);
+      $stmt = $pdo->prepare("UPDATE requests SET status = ? WHERE id = ? AND user_id = ?");
+      $stmt->execute([$_GET['status'], $_GET['id'], $_SESSION['user_id']]);
     } else {
-      die('<div class="container-fluid mt-4">
-          <div class="col-6 m-auto bg-white p-4 shadow-sm rounded">
+      echo ('<div class="container-fluid mt-4">
+          <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
               <div class="mb-0 alert alert-danger text-center">
                   <h4 class="mb-0 text-center">
-                      <i class="fas fa-ban"></i> Invalid method.
+                      <i class="fas fa-exclamation-circle"></i> Invalid method.
                   </h4>
               </div>
           </div>
       </div>');
+      include 'includes/footer.php';
+      exit;
     }
   }
 
   if ($_SESSION['user_role'] === 'student'){
-    $requests = $pdo->query("SELECT requests.*,societies.id as soc_id,societies.society_name FROM requests JOIN societies ON requests.society_id = societies.id ORDER BY created_at DESC")->fetchAll();
+    $stmt = $pdo->prepare("SELECT requests.*, societies.id as soc_id, societies.society_name 
+    FROM requests 
+    JOIN societies ON requests.society_id = societies.id 
+    WHERE requests.user_id = ? 
+    ORDER BY requests.created_at DESC");
+
+    $stmt->execute([$_SESSION['user_id']]);
+    $requests = $stmt->fetchAll();
   } else {
     $requests = $pdo->query("SELECT requests.*,societies.id as soc_id,societies.society_name FROM requests JOIN societies ON requests.society_id = societies.id WHERE requests.status = '0' ORDER BY created_at DESC")->fetchAll();
   }
@@ -61,6 +70,7 @@
     <form action="add_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light mb-4 shadow-sm">
       <h5><i class="fas fa-plus-circle"></i> Add New Request</h5>
       <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
+      <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
       <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
         <div style="flex-grow: 6;">
           <input type="text" class="form-control bg-body-secondary" name="title" placeholder="Request Title" readonly required value="<?php

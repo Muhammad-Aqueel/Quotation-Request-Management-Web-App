@@ -9,8 +9,8 @@
   }
 
   // Get request
-  $stmt = $pdo->prepare("SELECT * FROM requests WHERE id = ?");
-  $stmt->execute([$request_id]);
+  $stmt = $pdo->prepare("SELECT * FROM requests WHERE id = ? AND user_id = ?");
+  $stmt->execute([$request_id, $_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   // Get items
@@ -46,7 +46,7 @@
   }
 
   if(!$vendors){
-    echo "<div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> Quotations not exist to compare.</div><a href='quotations.php?request_id=" . $request_id . "' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a>";
+    echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-triangle'></i> Quotations not exist to compare.</div><a href='quotations.php?request_id=" . $request_id . "' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }

@@ -7,35 +7,18 @@
 
     $quotation_ids = $_POST['quotation_ids'] ?? [];
     if (empty($quotation_ids)) {
-        die('<!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>Export PDF</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <!-- Font Awesome CDN -->
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-          <!-- Bootstrap CSS -->
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-          <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-icon">
-          <style>
-            a{
-              text-decoration: none;
-            }
-          </style>
-        </head>
-        <body class="bg-light">
-        <div class="container-fluid mt-4">
-            <div class="col-6 m-auto bg-white p-4 shadow-sm rounded">
+        include 'includes/header.php';
+        echo ('<div class="container-fluid mt-4">
+            <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
                 <div class="mb-0 alert alert-danger text-center">
                     <h4 class="mb-0 text-center">
-                        <i class="fas fa-ban"></i> No quotations selected.
+                        <i class="fas fa-exclamation-circle"></i> No quotations selected.
                     </h4>
                 </div>
             </div>
-        </div>
-        </body>
-        </html>');
+        </div>');
+        include 'includes/footer.php';
+        exit;
     }
 
     $pdf = new TCPDF();
