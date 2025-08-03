@@ -23,7 +23,7 @@
       <!-- <img src="../assets/images/theme-logo.png" alt="theme logo" width="150"> -->
       <picture>
         <source media="(max-width: 767px)" srcset="../assets/images/favicon.png">
-        <img src="../assets/images/theme-logo.png" alt="theme logo" width="150" style="max-width: 100%;">
+        <img id="themeLogo" src="../assets/images/theme-logo-dark.png" alt="theme logo" width="150" style="max-width: 100%;">
       </picture>
     </a>
     <a class="navbar-brand" href="index.php"><i class="fas fa-file-invoice"></i> Vendor Portal</a>

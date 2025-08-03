@@ -30,7 +30,7 @@
 <body class="bg-body-tertiary">
   <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="dashboard.php"><img src="../assets/images/theme-logo.png" alt="theme logo" width="150"></a>
+      <a class="navbar-brand" href="dashboard.php"><img id="themeLogo" src="../assets/images/theme-logo-dark.png" alt="theme logo" width="150"></a>
       <!-- <a class="navbar-brand" href="dashboard.php"><i class="fas fa-tools me-2"></i> Admin Panel</a> -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
         <span class="navbar-toggler-icon"></span>

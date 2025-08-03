@@ -20,6 +20,18 @@ function updateThemeClasses() {
     } else if (theme === "light") {
         switchThemeClasses("-dark", "-light");
     }
+        updateThemeLogo(theme);
+}
+
+function updateThemeLogo(theme) {
+    const logo = document.getElementById('themeLogo');
+    if (!logo) return;
+
+    if (theme === 'dark') {
+        logo.src = '../assets/images/theme-logo-dark.png';
+    } else {
+        logo.src = '../assets/images/theme-logo-light.png';
+    }
 }
 
 // Apply theme on load
