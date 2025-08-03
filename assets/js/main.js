@@ -127,16 +127,19 @@ function close_modal(){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-const form = document.querySelector('form');
-if (form) {
-    form.addEventListener('submit', function (e) {
     const eventDateInput = document.getElementById('date-range-picker');
-    const eventDate = eventDateInput?.value.trim();
     
-    if (!eventDate) {
-        e.preventDefault();
-        eventDateInput?.focus();
+    // Only run if the date picker exists on the page
+    if (eventDateInput) {
+        const form = eventDateInput.closest('form'); // Get the closest form that contains this input
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                const eventDate = eventDateInput.value.trim();
+                if (!eventDate) {
+                    e.preventDefault();
+                    eventDateInput.focus();
+                }
+            });
+        }
     }
-    });
-}
 });
