@@ -1,7 +1,7 @@
 <?php
   session_start();
-  include 'includes/header.php';
   require_once 'includes/db.php';
+  include 'includes/header.php';
 
   $stmt = $pdo->query("SELECT * FROM requests");
   $requests = $stmt->fetchAll();

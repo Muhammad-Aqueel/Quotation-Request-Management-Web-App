@@ -210,10 +210,16 @@
             </td>
             <td class="text-center">
               <span class="badge <?= $abadgeClass ?>"><?= htmlspecialchars($astatus) ?></span>
-              <?php if ($_SESSION['user_role'] === 'student'): ?>
-                &nbsp;
-                <span class="badge <?= $sbadgeClass ?>"><?= $stext ?></span>
+              <?php if ($_SESSION['user_role'] === 'admin' && $r['approval_status'] == 'Approved'): ?>
+                <a href="generate_purchase_order.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-primary" title="Purchase Order" target="_blank">
+                  <i class="fas fa-print"></i>
+                </a>
               <?php endif; ?>
+              <?php if ($_SESSION['user_role'] === 'student'): ?>
+                &nbsp;<span class="badge <?= $sbadgeClass ?>"><?= $stext ?></span>
+                <?php if ($r['purchase_order'] == '1'): ?>
+                  &nbsp;<span class="badge bg-danger">Payment Request</span>
+              <?php endif; endif; ?>
             </td>
             <td class="text-center">
               <?php if ($_SESSION['user_role'] === 'student'): ?>

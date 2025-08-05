@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS requests (
   event_date VARCHAR(100),
   status ENUM('0','1') NOT NULL,
   approval_status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+  purchase_order ENUM('0','1') NOT NULL DEFAULT '0',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES request_categories(id),
   FOREIGN KEY (user_id) REFERENCES users(id),
