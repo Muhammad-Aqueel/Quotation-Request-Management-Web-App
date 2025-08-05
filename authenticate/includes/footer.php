@@ -29,37 +29,9 @@
             echo $current_page === 'dashboard.php' ? 'setInterval(fetchStats, 5000); // update every 5s
             fetchStats();' : '';
             if ($_SESSION['user_role'] === 'student'){
-                echo 'function fetchNotifications() {
-                    fetch("ajax/notifications.php")
-                        .then(res => res.json())
-                        .then(data => {
-                        const count = data.length;
-                        const badge = document.getElementById("noti-count");
-                        const list = document.getElementById("notifications-list");
-                
-                        badge.textContent = count ? count : "";
-                        list.innerHTML = "";
-                
-                        if (data.length === 0) {
-                            list.innerHTML = `<li class="dropdown-item text-muted small">No new notification.</li>`;
-                            return;
-                        }
-                
-                        data.forEach(n => {
-                            const li = document.createElement("li");
-                            li.className = "dropdown-item";
-                            li.innerHTML = `
-                            <strong>${n.name}</strong> - ${n.company}<br>
-                            <small>${n.submitted_at}</small><br>
-                            <a href="view_quotation.php?id=${n.id}" class="nav_active_link small">View Quotation</a>
-                            `;
-                            list.appendChild(li);
-                        });
-                    });
-                }
-                setInterval(fetchNotifications, 5000); // update every 5s
-                fetchNotifications();
-                // Start polling
+                echo 'setInterval(fetchNotifications, 5000); // update every 5s
+                    fetchNotifications();
+                    // Start polling
                 setInterval(pollNewQuotes, 5000); // Every 5 seconds';
             }
         ?>

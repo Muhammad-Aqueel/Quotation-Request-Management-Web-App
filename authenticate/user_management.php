@@ -1,13 +1,10 @@
 <?php
-require 'includes/db.php';
-require 'includes/auth.php';
+include 'includes/header.php';
 require_login(); 
 require_admin();// Only admins can access this page
 
 $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY role, username")->fetchAll();
 ?>
-
-<?php include 'includes/header.php'; ?>
 
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-3">

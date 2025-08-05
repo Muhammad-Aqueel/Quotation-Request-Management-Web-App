@@ -6,8 +6,8 @@
     $id = intval($_GET['id']);
     $request_id = intval($_GET['request_id']);
 
-    $stmt = $pdo->prepare("SELECT * FROM requests WHERE id = ? AND user_id = ?");
-    $stmt->execute([$request_id, $_SESSION['user_id']]);
+    $stmt = $pdo->prepare("SELECT * FROM requests r WHERE r.id = ? AND (r.user_id = ? OR EXISTS ( SELECT 1 FROM users u WHERE u.id = ? AND u.role IN ('admin', 'osas')))");
+    $stmt->execute([$request_id, $_SESSION['user_id'], $_SESSION['user_id']]);
     $request = $stmt->fetch();
   
     if (!$request) {

@@ -32,10 +32,10 @@ if ($requests):
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm bg-light" style="--bs-bg-opacity: .7;backdrop-filter: blur(5px);">
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-clipboard-list nav_active_link"></i> <?= htmlspecialchars($r['title']) ?></h5>
-            <h6><?= htmlspecialchars($r['category_name']) ?></h6>
-            <p class="card-text text-truncate" title="<?= htmlspecialchars($r['description']) ?>"><?= nl2br(htmlspecialchars($r['description'])) ?></p>
-            <p><i class="fa-solid fa-calendar-days text-muted"></i> <?= date('d-M-Y', strtotime(htmlspecialchars($r['created_at']))) ?>&emsp;<i class="fa-solid fa-clock text-muted"></i> <?= date('h:i A', strtotime(htmlspecialchars($r['created_at']))) ?></p>
+            <h5 class="card-title"><i class="fas fa-clipboard-list"></i> <?= htmlspecialchars($r['title']) ?></h5>
+            <h6 class="card-text text-truncate" title="<?= htmlspecialchars($r['description']) ?>"><i class="fa-solid fa-star text-muted"></i> <?= nl2br(htmlspecialchars($r['description'])) ?></h6>
+            <p><i class="fas fa-layer-group text-muted"></i> <?= htmlspecialchars($r['category_name']) ?></p>
+            <p><i class="fa-solid fa-calendar-days text-muted"></i> Request Date: <?= date('d-M-Y', strtotime(htmlspecialchars($r['created_at']))) ?></p>
             <a href="quote.php?request_id=<?= $r['id'] ?>" class="btn btn-primary theme_bg_color theme_border_color">
                 <i class="fas fa-pen-to-square"></i> Submit Quotation
             </a>
@@ -44,7 +44,7 @@ if ($requests):
     </div>
   <?php endif; endforeach;
 else:
-  echo "<div class='alert alert-info'>No requests found for selected filters.</div>";
+  echo "<div class='alert alert-info'><i class='fas fa-exclamation-circle'></i> No requests found for selected filters.</div>";
 endif;
 
 

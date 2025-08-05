@@ -2,10 +2,10 @@
   include 'includes/header.php';
 
   $id = intval($_GET['id'] ?? 0);
-  
+
   // Fetch full request details
-  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ? AND user_id = ?");
-  $stmt->execute([$id,$_SESSION['user_id']]);
+  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name, u_creator.username AS created_by, ( SELECT COUNT(*) FROM quotations q WHERE q.request_id = r.id ) AS quotations_count FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id INNER JOIN users u_creator ON r.user_id = u_creator.id WHERE r.id = ? AND ( r.user_id = ? OR ( EXISTS ( SELECT 1 FROM users u WHERE u.id = ? AND u.role IN ('admin', 'osas') ) AND r.status = '0' ) )");
+  $stmt->execute([$id, $_SESSION['user_id'], $_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   if (!$request) {
@@ -58,6 +58,7 @@
         <div class="border rounded p-3 w-100 h-100 transition">
           <h2 class="fw-bold mb-2">Request Title: <?= $request['title'] ?></h2>
           <h4 class="text-muted mb-0">Event: <?= $request['description'] ?></h4>
+          <h5 class="text-muted mb-0">User Name: <?= $request['created_by'] ?></h5>
         </div>
     </div>
 
@@ -92,7 +93,7 @@
         </p>
         <p class="mb-0">
           <i class="fas fa-money-check-dollar"></i>
-          <strong>Quotations:</strong> <a href="quotations.php?request_id=<?= $request['request_id'] ?>" class="btn btn-sm btn-info" target="_blank"><i class="fas fa-eye"></i></a>
+          <strong>Quotations:</strong> <a href="quotations.php?request_id=<?= $request['request_id'] ?>" class="btn btn-sm btn-info position-relative d-inline-block" target="_blank"><i class="fas fa-eye"></i><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color" style="top: -0.5rem; right: -0.5rem;"><?= $request['quotations_count'] ?></span></a>
         </p>
       </div>
     </div>

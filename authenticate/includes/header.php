@@ -58,6 +58,11 @@
               <i class="fas fa-users text-center n-icon"></i> Users
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" <?= is_active('societies.php') ?>" href="societies.php">
+              <i class="fas fa-university text-center n-icon"></i> Societies
+            </a>
+          </li>
         <?php endif; ?>
         <li class="nav-item">
           <a class="nav-link me-4 <?= is_active('profile.php') ?>" href="profile.php">

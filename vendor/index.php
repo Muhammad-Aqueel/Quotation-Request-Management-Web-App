@@ -113,7 +113,7 @@
       });
     })
     .catch(() => {
-      document.getElementById("requestsList").innerHTML = "<div class='alert alert-danger'>Failed to load.</div>";
+      document.getElementById("requestsList").innerHTML = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> Failed to load.</div>";
     });
   });
 

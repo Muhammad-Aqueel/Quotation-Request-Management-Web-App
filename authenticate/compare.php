@@ -9,8 +9,8 @@
   }
 
   // Get request
-  $stmt = $pdo->prepare("SELECT * FROM requests WHERE id = ? AND user_id = ?");
-  $stmt->execute([$request_id, $_SESSION['user_id']]);
+  $stmt = $pdo->prepare("SELECT * FROM requests r WHERE r.id = ? AND (r.user_id = ? OR (EXISTS ( SELECT 1 FROM users u WHERE u.id = ? AND u.role IN ('admin', 'osas')) AND r.status = '0' ))");
+  $stmt->execute([$request_id, $_SESSION['user_id'], $_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   // Get items
@@ -106,11 +106,12 @@
       </tfoot>
     </table>
   </div>
-<?php else: echo "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> No request selected.</div>"; ?>
+  <a href='quotations.php?request_id=<?= $request_id ?>' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a>
+<?php else: echo "<div class='container'><div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> No request selected.</div>"; ?>
+  <a href="quotations.php?request_id=<?= $request_id ?>" class="btn btn-secondary btn-sm mt-3">
+    <i class="fas fa-arrow-left"></i> Back
+  </a></div>
 <?php endif ?>
 
-<a href="quotations.php?request_id=<?= $request_id ?>" class="btn btn-secondary btn-sm mt-3">
-  <i class="fas fa-arrow-left"></i> Back
-</a>
 
 <?php include 'includes/footer.php'; ?>

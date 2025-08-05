@@ -23,16 +23,11 @@
   }
 
   if ($_SESSION['user_role'] === 'student'){
-    $stmt = $pdo->prepare("SELECT requests.*, societies.id as soc_id, societies.society_name 
-    FROM requests 
-    JOIN societies ON requests.society_id = societies.id 
-    WHERE requests.user_id = ? 
-    ORDER BY requests.created_at DESC");
-
+    $stmt = $pdo->prepare("SELECT r.*, s.id AS soc_id, s.society_name, COUNT(q.id) AS quotations_count FROM requests r JOIN societies s ON r.society_id = s.id LEFT JOIN quotations q ON q.request_id = r.id LEFT JOIN vendors v ON q.vendor_id = v.id WHERE r.user_id = ? GROUP BY r.id ORDER BY r.created_at DESC");
     $stmt->execute([$_SESSION['user_id']]);
     $requests = $stmt->fetchAll();
   } else {
-    $requests = $pdo->query("SELECT requests.*,societies.id as soc_id,societies.society_name FROM requests JOIN societies ON requests.society_id = societies.id WHERE requests.status = '0' ORDER BY created_at DESC")->fetchAll();
+    $requests = $pdo->query("SELECT r.*, s.id AS soc_id, s.society_name, COUNT(q.id) AS quotations_count FROM requests r JOIN societies s ON r.society_id = s.id LEFT JOIN quotations q ON q.request_id = r.id WHERE r.status = '0' GROUP BY r.id ORDER BY r.created_at DESC")->fetchAll();
   }
 
   if(isset($_SESSION['request_add_message'])){
@@ -45,7 +40,7 @@
   $socs = $pdo->query("SELECT * FROM societies ORDER BY society_name")->fetchAll();
   // Fetch terms and conditions
   $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
-  
+
   if(isset($_POST['tandcedit'])){
     $stmt = $pdo->prepare("UPDATE terms_and_conditions SET content=? WHERE id = 1");
     $stmt->execute([$_POST['tandc']]);
@@ -58,9 +53,6 @@
     <div class="d-flex mb-3 align-items-center justify-content-between">
       <h2><i class="fas fa-tasks"></i> Manage Requests</h2>
       <div>
-        <a href="societies.php" class="btn btn-sm btn-outline-primary ">
-          <i class="fas fa-university"></i> Societies
-        </a>
         <a href="request_category.php" class="btn btn-sm btn-outline-primary ">
           <i class="fa-solid fa-layer-group"></i> Categories
         </a>
@@ -210,9 +202,10 @@
             <td><?= htmlspecialchars($r['society_name']) ?></td>
             <td class="text-truncate" style="max-width: 100px;" title="<?= htmlspecialchars($r['description']) ?>"><?= htmlspecialchars($r['description']) ?></td>
             <td class="text-truncate" style="max-width: 100px;" title="<?= htmlspecialchars($r['event_date']) ?>"><?= $r['event_date'] ?></td>
-            <td class="text-center" title="View Quotations">
-                <a href="quotations.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-info" target="_blank">
+            <td class="text-center">
+                <a href="quotations.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-info position-relative d-inline-block" target="_blank" title="View Quotations">
                   <i class="fas fa-eye"></i>
+                  <span class="position-absolute opacity-75 badge rounded-pill theme_bg_color" style="top: -0.5rem; right: -0.5rem;"><?= $r['quotations_count'] ?></span>
                 </a>
             </td>
             <td class="text-center">

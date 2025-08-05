@@ -13,8 +13,7 @@
 
   $ids = array_map('intval', $ids);
   $id_placeholders = implode(',', array_fill(0, count($ids), '?'));
-echo $id_placeholders . "<br>";
-print_r($ids);
+
   switch ($action) {
     // cascade deletes due to foreign key constraints, if cascade delete not applied then uncomment all SQL code lines below
     case 'delete':

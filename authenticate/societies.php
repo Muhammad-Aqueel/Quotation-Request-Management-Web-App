@@ -1,44 +1,44 @@
 <?php
   include 'includes/header.php';
-  require_once 'includes/csrf.php';
-    require_login();
+  require_login();
+  require_admin();// Only admins can access this page
 
-    $message = "";
+  $message = "";
 
-    // Handle new Society addition
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-        $name = trim($_POST['society_name']);
-        if ($name) {
-            try {
-                $stmt = $pdo->prepare("INSERT INTO societies (society_name) VALUES (?)");
-                $stmt->execute([$name]);
-                $message = "<div class='alert alert-success'><i class='fas fa-exclamation-circle'></i> Society added.</div>";
-            } catch (PDOException $e) {
-                if ($e->errorInfo[1] == 1062) {
-                  // Optional: extract more if needed
-                  $error = $e->errorInfo[2];
-                  $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . str_replace("for key", "for", $error) . "</div>";
-                } else {
-                  $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
-                }
-            }
-        }
-    }
+  // Handle new Society addition
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
+      $name = trim($_POST['society_name']);
+      if ($name) {
+          try {
+              $stmt = $pdo->prepare("INSERT INTO societies (society_name) VALUES (?)");
+              $stmt->execute([$name]);
+              $message = "<div class='alert alert-success'><i class='fas fa-exclamation-circle'></i> Society added.</div>";
+          } catch (PDOException $e) {
+              if ($e->errorInfo[1] == 1062) {
+                // Optional: extract more if needed
+                $error = $e->errorInfo[2];
+                $message = "<div class='alert alert-danger'><i class='fas fa-exclamation-circle'></i> " . str_replace("for key", "for", $error) . "</div>";
+              } else {
+                $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+              }
+          }
+      }
+  }
 
-    // Handle Society deletion
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
-        try {
-          $id = intval($_POST['delete_id']);
-          $stmt = $pdo->prepare("DELETE FROM societies WHERE id = ?");
-          $stmt->execute([$id]);
-          $message = "<div class='alert alert-info'><i class='fas fa-exclamation-circle'></i>  Society deleted.</div>";
-        } catch (PDOException $e) {
-          $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
-        }
-    }
+  // Handle Society deletion
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+      try {
+        $id = intval($_POST['delete_id']);
+        $stmt = $pdo->prepare("DELETE FROM societies WHERE id = ?");
+        $stmt->execute([$id]);
+        $message = "<div class='alert alert-info'><i class='fas fa-exclamation-circle'></i>  Society deleted.</div>";
+      } catch (PDOException $e) {
+        $message = "<div class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> " . $e->getMessage() . "</div>";
+      }
+  }
 
-    // Fetch all Societies
-    $societies = $pdo->query("SELECT * FROM societies ORDER BY society_name")->fetchAll();
+  // Fetch all Societies
+  $societies = $pdo->query("SELECT * FROM societies ORDER BY society_name")->fetchAll();
 ?>
 
 <div class="container">

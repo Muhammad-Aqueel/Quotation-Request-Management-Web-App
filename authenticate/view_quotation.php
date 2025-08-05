@@ -15,17 +15,18 @@
   $quotation = $stmt->fetch();
 
   if (!$quotation) {
-    echo "<div class='container'><p class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Quotation not found.</p></div>";
+    echo "<div class='container'><p class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Quotation not found.</p><a href='quotations.php' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
     include 'includes/footer.php';
     exit;
   }
   
-  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ? AND user_id = ?");
-  $stmt->execute([$quotation ['request_id'], $_SESSION['user_id']]);
+  $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name, u_creator.username AS created_by FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id INNER JOIN users u_creator ON r.user_id = u_creator.id WHERE r.id = ? AND ( r.user_id = ? OR ( EXISTS ( SELECT 1 FROM users u WHERE u.id = ? AND u.role IN ('admin', 'osas') ) AND r.status = '0' ) )");
+  $stmt->execute([$quotation ['request_id'], $_SESSION['user_id'], $_SESSION['user_id']]);
   $request = $stmt->fetch();
 
   if (!$request) {
-      header("Location: quotations.php");
+      echo "<div class='container'><p class='alert alert-warning'><i class='fas fa-exclamation-circle'></i> Quotation not found.</p><a href='quotations.php?request_id=" . $quotation['request_id'] . "' class='btn btn-secondary btn-sm mt-3'><i class='fas fa-arrow-left'></i> Back</a></div>";
+      include 'includes/footer.php';
       exit;
   }
 
@@ -82,6 +83,7 @@
         <div class="border rounded p-3 w-100 h-100 transition reqlink">
           <h2 class="fw-bold mb-2">Request Title: <?= $request['title'] ?></h2>
           <h4 class="text-muted mb-0">Event: <?= $request['description'] ?></h4>
+          <h5 class="text-muted mb-0">User Name: <?= $request['created_by'] ?></h5>
         </div>
       </a>
     </div>
@@ -152,17 +154,17 @@
           </p>
           <div class="d-flex flex-wrap gap-2">
             <?php if ($quotation['status'] !== 'Deleted'): ?>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Approved" class="btn btn-success btn-sm">
+              <a href="update_quotation_status.php?id=<?= $id ?>&status=Approved&request_id=<?= $request['request_id'] ?>" class="btn btn-success btn-sm">
                 <i class="fas fa-check-circle"></i> Approve
               </a>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Rejected" class="btn btn-warning btn-sm">
+              <a href="update_quotation_status.php?id=<?= $id ?>&status=Rejected&request_id=<?= $request['request_id'] ?>" class="btn btn-warning btn-sm">
                 <i class="fas fa-times-circle"></i> Reject
               </a>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Deleted" class="btn btn-danger btn-sm">
+              <a href="update_quotation_status.php?id=<?= $id ?>&status=Deleted&request_id=<?= $request['request_id'] ?>" class="btn btn-danger btn-sm">
                 <i class="fas fa-trash-alt"></i> Recycle
               </a>
             <?php else: ?>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Pending" class="btn btn-success btn-sm">
+              <a href="update_quotation_status.php?id=<?= $id ?>&status=Pending&request_id=<?= $request['request_id'] ?>" class="btn btn-success btn-sm">
                 <i class="fas fa-undo"></i> Restore
               </a>
               <a href="permanent_delete_quotation.php?id=<?= $id ?>&request_id=<?= $request['request_id'] ?>" 
