@@ -78,7 +78,7 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
     > Exporting selected quotations as a single PDF via `export_selected.php`
     > Generating individual PDFs inside ZIP exports via `export_selected_zip.php`
     > Purchase Order in PDF
-   > Payment Request in PDF
+    > Payment Request in PDF
 ---
 
 ## Security Measures
