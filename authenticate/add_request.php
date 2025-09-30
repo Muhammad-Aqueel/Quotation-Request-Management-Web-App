@@ -24,6 +24,12 @@ if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $title = trim($_POST['title']);
+
+    $requests = $pdo->query("SELECT r.*, s.id AS soc_id, s.society_name, COUNT(q.id) AS quotations_count FROM requests r JOIN societies s ON r.society_id = s.id LEFT JOIN quotations q ON q.request_id = r.id GROUP BY r.id ORDER BY r.created_at DESC")->fetchAll();
+    $latestId = isset($requests[0]) ? $requests[0]['id'] : null; // Last ID from database
+    $id = $latestId + 1; // Last ID + 1
+    $title = sprintf("PR%04d", $id); // e.g: PR0001
+
     $category_id = trim($_POST['category_id']);
     $user_id = trim($_POST['user_id']);
     $eventdate = trim($_POST['eventdate']);

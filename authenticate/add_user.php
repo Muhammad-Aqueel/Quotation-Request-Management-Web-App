@@ -24,37 +24,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
+include 'includes/header.php';
 ?>
 
-<?php include 'includes/header.php'; if (isset($other_error)): ?>
-  <div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($other_error) ?></div>
-<?php endif; ?>
-<h2 class="mb-4 mt-5 text-center"><i class="fas fa-user-plus"></i> Add New User</h2>
-<form method="post" class="border p-3 bg-light rounded shadow-sm m-auto col-md-8">
-  <div class="mb-2">
-    <label class="form-label"><i class="fas fa-user"></i> Username</label>
-    <?php if (isset($error)): ?>
-      <small class="alert text-danger"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></small>
-    <?php endif; ?>
-    <input type="text" name="username" class="form-control" placeholder="User Name" required>
-  </div>
-  <div class="mb-2">
-    <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
-    <input type="email" name="email" class="form-control" placeholder="Email" required>
-  </div>
-  <div class="mb-2">
-    <label class="form-label"><i class="fas fa-user-cog"></i> Role</label>
-    <select name="role" class="form-select" required>
-      <option value="student">Student</option>
-      <option value="osas">OSAS</option>
-    </select>
-  </div>
-  <div class="mb-2">
-    <label class="form-label"><i class="fas fa-lock"></i> Password</label>
-    <input type="password" name="password" class="form-control" placeholder="Password" required>
-  </div>
-  <button class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-save"></i> Create</button>
-  <a href="user_management.php" class="btn btn-secondary"><i class="fas fa-circle-xmark"></i> Cancel</a>
-</form>
+<div class="container">
+  <?php if (isset($other_error)): ?>
+    <div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($other_error) ?></div>
+  <?php endif; ?>
+  <h2 class="mb-4 mt-5 text-center"><i class="fas fa-user-plus"></i> Add New User</h2>
+  <form method="post" class="border p-3 bg-light rounded shadow-sm m-auto col-md-6">
+    <div class="mb-2">
+      <label class="form-label"><i class="fas fa-user"></i> Username</label>
+      <?php if (isset($error)): ?>
+        <small class="alert text-danger"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></small>
+      <?php endif; ?>
+      <input type="text" name="username" class="form-control" placeholder="User Name" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+      <input type="email" name="email" class="form-control" placeholder="Email" required>
+    </div>
+    <div class="mb-2">
+      <label class="form-label"><i class="fas fa-user-cog"></i> Role</label>
+      <select name="role" class="form-select" required>
+        <option value="student">Student</option>
+        <option value="osas">OSAS</option>
+      </select>
+    </div>
+    <div class="mb-2">
+      <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Password" required>
+    </div>
+    <button class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-save"></i> Create</button>
+    <a href="user_management.php" class="btn btn-secondary"><i class="fas fa-circle-xmark"></i> Cancel</a>
+  </form>
+</div>
 
 <?php include 'includes/footer.php'; ?>

@@ -26,9 +26,11 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 - Trash/recycle bin for quotations (soft delete)
 - Bulk and single operations Delete, Restore, Approve, Reject, Open/Close
 - Compare quotations (total and per-item matrix)
-- Export selected quotations:
-  - PDF
-  - ZIP (with attachments)
+- Export PDF:
+  - Selected Quotations
+  - Selected Quotations ZIP (with attachments)
+  - Purchase Order
+  - Payment Request
 - Notification system:
   - Bell icon with live quote updates
   - Toastr visual + sound alerts
@@ -37,15 +39,12 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
 - Profile management (change email/password)
 - Full responsive design using Bootstrap 5.3
 - Datatable for requests and quotations tables
-- User management **(only for admin)**
+- User/Vendors management **(only for admin)**
 - Three roles: Admin, Student and OSAS
 
 ### Theme
 - **Light/Dark Mode Toggle:** Users can switch between light and dark themes.
 - **Persistent Theme Preference:** The user's selected theme is saved (e.g., in local storage) and reapplied automatically the next time they visit.
-
-### Future Features
-- Vendors data operations page
 
 ---
 
@@ -72,13 +71,14 @@ A PHP & MySQL-based web application for managing vendor quotations. Built withou
    - Create DB tables (via `schema.sql`)
    - Save `config.php`
    - Redirect to admin login
-6. **Download** TCPDF Go to: [TCPDF Github](https://github.com/tecnickcom/tcpdf)
-   - Download and extract it into: `/libs/tcpdf/`
-   > **tcpdf.php** must be showed up like this `/libs/tcpdf/tcpdf.php`
-   > TCPDF is used for:
-   > Exporting selected quotations as a single PDF via `export_selected.php`
-   > Generating individual PDFs inside ZIP exports via `export_selected_zip.php`
-
+6. External Library Folder:
+    - **FPDF** *PHP PDF Library* **(Required)**
+    > **fpdf.php** must be showed up like this `/libs/fpdf/fpdf.php`
+    > FPDF is used for:
+    > Exporting selected quotations as a single PDF via `export_selected.php`
+    > Generating individual PDFs inside ZIP exports via `export_selected_zip.php`
+    > Purchase Order in PDF
+   > Payment Request in PDF
 ---
 
 ## Security Measures
@@ -122,6 +122,120 @@ Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excludin
 
 ---
 
+# Quotation App Directory Structure
+
+quotation-app/
+│
+├── assets/                      # Static assets
+│   ├── css/                     # Stylesheets
+│   │   ├── air-datepicker.css   # Datepicker plugin styles
+│   │   ├── main.css             # Main stylesheet
+│   │   ├── payment_request.css  # Payment request print styling
+│   │   ├── purchase_order.css   # Purchase order print styling
+│   │   ├── view_quotation.css   # View quotation stylesheet
+│   │   └── view_request.css     # View request stylesheet
+│   ├── images/                  # Image storage
+│   │   ├── .htaccess
+│   │   ├── favicon.png
+│   │   ├── theme-logo-dark.png
+│   │   └── theme-logo-light.png
+│   ├── js/                      # JavaScript files
+│   │   ├── air-datepicker.js    # Datepicker plugin
+│   │   ├── main.js              # Main JavaScript
+│   │   └── themeswitch.js       # Dark/light theme switcher
+│   └── .htaccess                # Asset protection rules
+│
+├── authenticate/                # Authenticated area (secure modules)
+│   ├── ajax/                     # AJAX endpoints
+│   │   ├── check_new_quotes.php  # Check for new quotations
+│   │   ├── dashboard_stats.php   # Dashboard stats data
+│   │   ├── delete_request_attachment.php # Delete request attachment
+│   │   ├── delete_request_item.php # Delete request item
+│   │   └── notifications.php     # Notifications fetcher
+│   ├── includes/                 # Shared includes
+│   │   ├── auth.php              # Authentication/authorization
+│   │   ├── csrf.php              # CSRF protection
+│   │   ├── db.php                # Database connection
+│   │   ├── footer.php            # Common footer
+│   │   ├── functions.php         # Helper functions
+│   │   └── header.php            # Common header
+│   ├── add_request.php           # Add new request
+│   ├── add_user.php              # Add new user
+│   ├── bulk_quotation_action.php # Bulk actions on quotations
+│   ├── bulk_request_action.php   # Bulk actions on requests
+│   ├── compare.php               # Compare quotations
+│   ├── dashboard.php             # Dashboard overview
+│   ├── delete_request.php        # Delete request
+│   ├── delete_user.php           # Delete user
+│   ├── edit_request.php          # Edit request details
+│   ├── edit_user.php             # Edit user details
+│   ├── export_selected.php       # Export selected quotations
+│   ├── export_selected_zip.php   # Export selected quotations (ZIP)
+│   ├── generate_payment_request.php # Generate payment requests
+│   ├── generate_purchase_order.php  # Generate purchase orders
+│   ├── index.php                 # Authenticated index page
+│   ├── login.php                 # Login page
+│   ├── logout.php                # Logout handler
+│   ├── mark_all_read.php         # Mark notifications as read
+│   ├── permanent_delete_quotation.php # Permanently delete quotation
+│   ├── print_payment_request.php # Print payment_request
+│   ├── print_purchase_order.php  # Print purchase order
+│   ├── profile.php               # User profile
+│   ├── quotations.php            # Manage quotations
+│   ├── request_approval.php      # Approve/deny requests
+│   ├── request_category.php      # Manage request categories
+│   ├── requests.php              # Request management
+│   ├── societies.php             # Societies management
+│   ├── update_quotation_status.php # Update quotation status
+│   ├── update_request.php        # Update request
+│   ├── user_management.php       # Manage users
+│   ├── vendors.php               # Vendor management
+│   ├── view_quotation.php        # View quotation details
+│   └── view_request.php          # View request details
+│
+├── install/                      # Installer
+│   ├── index.php                 # Installation script
+│   ├── schema.sql                # Database schema
+│   └── test_connection.php       # Test DB connection
+│
+├── libs/                         # External libraries
+│   ├── README.md
+│   └── fpdf/                     # FPDF library (PDF generation)
+│
+├── uploads/                      # Uploaded files
+│   ├── .htaccess                 # Security restrictions
+│   ├── quotation_attachments/    # Uploaded quotation files
+│   ├── request_attachments/      # Uploaded request files
+│   └── tmp/                      # Temporary files
+│
+├── vendor/                       # Vendor-facing area
+│   ├── assets/                   # Vendor assets
+│   │   ├── css/
+│   │   │   └── main.css          # Vendor stylesheet
+│   │   │   └── quote.css         # Vendor quote stylesheet
+│   │   └── js/
+│   │       └── main.js           # Vendor JavaScript
+│   ├── fetch_requests.php        # Fetch requests for vendors
+│   ├── includes/                 # Vendor includes
+│   │   ├── db.php
+│   │   ├── footer.php
+│   │   └── header.php
+│   ├── index.php                 # Vendor dashboard
+│   ├── quote.php                 # Vendor quotation form
+│   └── submit_quote.php          # Vendor quotation submission
+│
+├── .htaccess                     # Apache rewrite & access rules
+├── 403.php                       # Custom 403 Forbidden page
+├── 404.php                       # Custom 404 Not Found page
+├── LICENSE                       # License information
+├── README.md                     # Project documentation
+├── baseurl.php                   # Base URL config
+├── config.php                    # App configuration (Auto-generate by installer)
+├── index.php                     # Homepage/entry point
+└── zip_me_first.php              # Utility script (zip/export)
+
+---
+
 ## Developer Notes
 - No third-party frameworks (plain PHP, MySQL, JS)
 - Bootstrap 5.3.3 UI
@@ -130,7 +244,7 @@ Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excludin
 - AJAX used for:
   - Vendor filtering
   - Attachment deletion
-  - Notifications
+  - Notifications etc
 
 ---
 

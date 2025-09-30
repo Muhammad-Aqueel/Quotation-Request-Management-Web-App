@@ -59,8 +59,8 @@
     <table class="table table-bordered align-middle table-sm table-striped">
       <thead>
         <tr class="table-light">
-          <th>Item</th>
-          <th>Qty</th>
+          <th title="Item/description with specifications"><i class="fas fa-box"></i> Item</th>
+          <th title="Quantity/unit of measure"><i class="fas fa-sort-numeric-up-alt"></i> Qty</th>
           <?php foreach ($vendor_ids as $vid): ?>
             <th><?= htmlspecialchars($vendor_map[$vid]['name']) ?><br><small><?= htmlspecialchars($vendor_map[$vid]['company']) ?></small></th>
           <?php endforeach; ?>

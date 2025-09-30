@@ -2,17 +2,13 @@
   include 'includes/header.php';
 ?>
 
-<style>
-
-</style>
-
 <div class="container">
   <h2 class="mb-4"><i class="fas fa-user-shield"></i> Welcome, <?= htmlspecialchars($_SESSION['user_username']) ?></h2>
   
   <div class="row g-3">
     <div class="col-md-4">
       <a href="requests.php" class="btn btn-outline-primary w-100">
-        <i class="fas fa-clipboard-list"></i> Manage Requests
+        <i class="fas fa-clipboard-list"></i> Manage RFQ
       </a>
     </div>
     <div class="col-md-4">
@@ -31,7 +27,7 @@
   
   <div class="row g-3">
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">
@@ -50,7 +46,7 @@
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">
@@ -69,7 +65,7 @@
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">
@@ -88,7 +84,7 @@
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">
@@ -107,7 +103,7 @@
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">
@@ -126,7 +122,7 @@
       </div>
     </div>
     <div class="col-sm-6 col-md-4">
-      <div class="shadow card card-stats">
+      <div class="shadow card border-0 card-stats">
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-icon">

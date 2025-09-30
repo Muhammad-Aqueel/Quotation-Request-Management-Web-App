@@ -68,7 +68,7 @@
     <thead class="table-light">
       <tr>
         <th style="width: 500px;"><i class="fa-solid fa-layer-group"></i> Category</th>
-        <th style="width: 200px;"><i class="fas fa-cogs"></i> Action</th>
+        <th style="width: 200px;" class="text-center"><i class="fas fa-cogs"></i> Action</th>
       </tr>
     </thead>
     <tbody>
@@ -78,7 +78,7 @@
         <td class="text-center">
           <form method="post" onsubmit="return confirm('Delete this category?')">
             <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
-            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
           </form>
         </td>
       </tr>

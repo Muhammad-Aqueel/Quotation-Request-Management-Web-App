@@ -14,8 +14,8 @@
 <h2 class="mb-4"><i class="fas fa-bullhorn"></i> Available Requests</h2>
 <!-- Filter Sidebar Widget -->
 <div id="filterSidebar" class="filter-sidebar shadow-lg">
-  <div class="card" style="border-radius: 6px 0px 0px 6px;">
-    <div class="card-header bg-primary text-white fw-bold py-2" style="background-color: #903035 !important;border-radius: 5px 0px 0px 0px;">
+  <div class="card" style="border-radius: 4px 0px 0px 4px;">
+    <div class="card-header bg-primary text-white fw-bold py-2" style="background-color: #903035 !important;border-radius: 4px 0px 0px 0px;">
       <div class="d-flex align-items-center justify-content-between">
         <div><i class="fas fa-filter"></i> Filter Requests</div>
         <i id="closeFilterBtn" class="fas fa-close rounded-1 py-1 px-2 theme_outline_btn_color"></i>
@@ -54,7 +54,7 @@
 </div>
 
 <!-- Filter Toggle Button -->
-<button id="toggleFilterBtn" class="active btn btn-primary theme_bg_color theme_border_color shadow-sm toggle-filter-btn" title="Filter Requests">
+<button id="toggleFilterBtn" class="active btn btn-primary theme_bg_color theme_border_color shadow-sm toggle-filter-btn" title="Filter Requests" style="border-radius: 4px 0 0 4px;">
   <i class="fas fa-filter"></i>
 </button>
 

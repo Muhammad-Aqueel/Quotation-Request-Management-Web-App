@@ -5,19 +5,19 @@ CREATE TABLE  IF NOT EXISTS users (
   password_hash VARCHAR(255),
   email VARCHAR(100),
   role ENUM('admin', 'student', 'osas') NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create categories table
 CREATE TABLE IF NOT EXISTS request_categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create societies table
 CREATE TABLE IF NOT EXISTS societies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   society_name VARCHAR(255) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Request Table
 CREATE TABLE IF NOT EXISTS requests (
@@ -31,11 +31,12 @@ CREATE TABLE IF NOT EXISTS requests (
   status ENUM('0','1') NOT NULL,
   approval_status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
   purchase_order ENUM('0','1') NOT NULL DEFAULT '0',
+  po_gt DECIMAL(10,2),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (category_id) REFERENCES request_categories(id),
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (society_id) REFERENCES societies(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Items in each request
 CREATE TABLE IF NOT EXISTS request_items (
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS request_items (
   item_name VARCHAR(255),
   quantity INT,
   FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Request Attachments
 CREATE TABLE IF NOT EXISTS request_attachments (
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS request_attachments (
   filename VARCHAR(255),
   filepath TEXT,
   FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Vendor Table
 CREATE TABLE IF NOT EXISTS vendors (
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS vendors (
   company VARCHAR(255),
   ntn VARCHAR(255),
   submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Quotations Table
 CREATE TABLE IF NOT EXISTS quotations (
@@ -78,7 +79,7 @@ CREATE TABLE IF NOT EXISTS quotations (
   is_read TINYINT(1) DEFAULT 0,
   FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
   FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Quotation Items
 CREATE TABLE IF NOT EXISTS quotation_items (
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS quotation_items (
   unit_price DECIMAL(10,2),
   FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE,
   FOREIGN KEY (request_item_id) REFERENCES request_items(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Quotation Attachments
 CREATE TABLE IF NOT EXISTS quotation_attachments (
@@ -97,13 +98,13 @@ CREATE TABLE IF NOT EXISTS quotation_attachments (
   filename VARCHAR(255),
   filepath TEXT,
   FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- terms_and_conditions
 CREATE TABLE IF NOT EXISTS terms_and_conditions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   content TEXT NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 INSERT INTO `terms_and_conditions` (`content`) SELECT 'Terms and conditions...' WHERE NOT EXISTS ( SELECT 1 FROM `terms_and_conditions` );
 
 -- Request_items trigger after quantity changes

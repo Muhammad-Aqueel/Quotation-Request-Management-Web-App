@@ -8,16 +8,28 @@
 
     $allowed = ['Pending', 'Approved', 'Rejected'];
     if (!in_array($approval_status, $allowed)){
-        header("Location: requests.php");
+        // Determine where to redirect
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, 'view_request.php') !== false) {
+            header("Location: view_request.php?id=$id");
+        } else {
+            header("Location: requests.php");
+        }
     }
 
     if($approval_status == 'Pending' || $approval_status == 'Rejected'){
         // Mark this request as Purchase Order generated
-        $updateStmt = $pdo->prepare("UPDATE requests SET purchase_order = '0' WHERE id = ?");
-        $updateStmt->execute([$id]);
+        $updateStmt = $pdo->prepare("UPDATE requests SET purchase_order = '0', po_gt = ? WHERE id = ?");
+        $updateStmt->execute([null, $id]);
     }
 
     $stmt = $pdo->prepare("UPDATE requests SET approval_status = ? WHERE id = ?");
     $stmt->execute([$approval_status, $id]);
 
-    header("Location: requests.php");
+    // Determine where to redirect
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    if (strpos($referer, 'view_request.php') !== false) {
+        header("Location: view_request.php?id=$id");
+    } else {
+        header("Location: requests.php");
+    }

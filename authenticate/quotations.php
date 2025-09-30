@@ -38,11 +38,11 @@
   $quotations = $stmt->fetchAll();
   
   if ($_SESSION['user_role'] === 'student'){
-    $stmt = $pdo->prepare("SELECT * FROM requests WHERE user_id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM requests INNER JOIN societies ON requests.society_id = societies.id WHERE user_id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $requests = $stmt->fetchAll();  
   } else {
-    $requests = $pdo->query("SELECT * FROM requests WHERE status = '0'")->fetchAll();
+    $requests = $pdo->query("SELECT * FROM requests INNER JOIN societies ON requests.society_id = societies.id WHERE status = '0'")->fetchAll();
   }
 
   $stmt = $pdo->prepare("SELECT r.id AS request_id, r.title, r.description, r.event_date, r.status, r.approval_status, r.created_at, rc.name AS category_name, s.society_name FROM requests r INNER JOIN request_categories rc ON r.category_id = rc.id INNER JOIN societies s ON r.society_id = s.id WHERE r.id = ? AND (r.user_id = ? OR (EXISTS ( SELECT 1 FROM users u WHERE u.id = ? AND u.role IN ('admin', 'osas')) AND r.status = '0' ))");
@@ -66,7 +66,7 @@
         <option value="" selected disabled>Filter by Request</option>
         <?php foreach ($requests as $r): ?>
           <option value="<?= $r['id'] ?>" <?= $r['id'] == $request_id ? 'selected' : '' ?>>
-            <?= htmlspecialchars($r['title']) ?>
+            <?= htmlspecialchars($r['title']).' ('.$r['society_name'].')'?>
           </option>
         <?php endforeach; ?>
       </select>
@@ -92,21 +92,21 @@
       ?>
       <input type="radio" class="btn-check" name="filter" value="" id="filter-all" autocomplete="off"
              onchange="this.form.submit()" <?= $active_filter === '' ? 'checked' : '' ?>>
-      <label class="<?= $active_filter === '' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?> position-relative" for="filter-all">
+      <label class="<?= $active_filter === '' ? 'btn btn-link qnav-link fw-bold qnav_active_link' : 'btn btn-link qnav-link text-secondary' ?> position-relative" for="filter-all">
         <i class="fas fa-list"></i> All Quotations
         <?php if ($is_for_you_request && isset($_GET['request_id']) && intval($_GET['request_id'])):?><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color"><?= $del_unread_all_count[0]['all_count'] ?></span><?php endif; ?>
       </label>
 
       <input type="radio" class="btn-check" name="filter" value="unread" id="filter-unread" autocomplete="off"
              onchange="this.form.submit()" <?= $active_filter === 'unread' ? 'checked' : '' ?>>
-      <label class="<?= $active_filter === 'unread' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?> position-relative" for="filter-unread">
+      <label class="<?= $active_filter === 'unread' ? 'btn btn-link qnav-link fw-bold qnav_active_link' : 'btn btn-link qnav-link text-secondary' ?> position-relative" for="filter-unread">
         <i class="fas fa-envelope-open-text"></i> Unread
         <?php if ($is_for_you_request && isset($_GET['request_id']) && intval($_GET['request_id'])):?><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color"><?= $del_unread_all_count[0]['unread_count'] ?></span><?php endif; ?>
       </label>
 
       <input type="radio" class="btn-check" name="filter" value="bin" id="filter-bin" autocomplete="off"
              onchange="this.form.submit()" <?= $active_filter === 'bin' ? 'checked' : '' ?>>
-      <label class="<?= $active_filter === 'bin' ? 'btn btn-link nav-link fw-bold nav_active_link' : 'btn btn-link nav-link text-secondary' ?> position-relative" for="filter-bin">
+      <label class="<?= $active_filter === 'bin' ? 'btn btn-link qnav-link fw-bold qnav_active_link' : 'btn btn-link qnav-link text-secondary' ?> position-relative" for="filter-bin">
         <i class="fas fa-trash-alt"></i> Recycle Bin
         <?php if ($is_for_you_request && isset($_GET['request_id']) && intval($_GET['request_id'])):?><span class="position-absolute opacity-75 badge rounded-pill theme_bg_color"><?= $del_unread_all_count[0]['deleted_count'] ?></span><?php endif; ?>
       </label>
@@ -160,8 +160,8 @@
               <th><i class="fas fa-user"></i> Vendor</th>
               <th><i class="fas fa-building"></i> Company</th>
               <th><i class="fas fa-money-bill-wave"></i> Total</th>
-              <th><i class="fas fa-info-circle"></i> Status</th>
-              <th><i class="fas fa-cogs"></i> Actions</th>
+              <th class="text-center"><i class="fas fa-info-circle"></i> Status</th>
+              <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -194,28 +194,32 @@
                 <?php //endif; ?>
                 <td><?= htmlspecialchars($q['name']) ?></td>
                 <td><?= htmlspecialchars($q['company']) ?></td>
-                <td><?= number_format($q['total_amount'], 2) ?></td>
+                <td><?= number_format($q['total_amount'], 2) ?>
+                  <?php if ($q['total_amount'] == $lowest): ?>
+                    <i class="fas fa-star text-success small"></i>
+                  <?php endif; ?>
+                </td>
                 <td class="text-center"><span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($status) ?></span></td>
                 <td class="text-center">
-                  <a href="view_quotation.php?id=<?= $q['id'] ?>" class="btn btn-sm btn-info">
-                    <i class="fas fa-eye"></i> View
+                  <a href="view_quotation.php?id=<?= $q['id'] ?>" class="btn btn-sm btn-info" title="View">
+                    <i class="fas fa-eye"></i>
                   </a>
                   <?php if ($q['status'] === 'Deleted'): ?>
-                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Pending&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success">
-                      <i class="fas fa-undo"></i> Restore
+                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Pending&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success" title="Restore">
+                      <i class="fas fa-undo"></i>
                     </a>
-                    <a href="permanent_delete_quotation.php?id=<?= $q['id'] ?>&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete permanently?')">
-                      <i class="fas fa-fire"></i> Delete
+                    <a href="permanent_delete_quotation.php?id=<?= $q['id'] ?>&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete permanently?')" title="Delete">
+                      <i class="fas fa-fire"></i>
                     </a>
                   <?php else: ?>
-                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Approved&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success">
-                      <i class="fas fa-check-circle"></i> Approve
+                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Approved&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-success" title="Approve">
+                      <i class="fas fa-check-circle"></i>
                     </a>
-                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Rejected&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-warning">
-                      <i class="fas fa-times-circle"></i> Reject
+                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Rejected&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-warning" title="Reject">
+                      <i class="fas fa-times-circle"></i>
                     </a>
-                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Deleted&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger">
-                      <i class="fas fa-trash-alt"></i> Recycle
+                    <a href="update_quotation_status.php?id=<?= $q['id'] ?>&status=Deleted&request_id=<?= $_GET['request_id'] ?>" class="btn btn-sm btn-danger" title="Recycle">
+                      <i class="fas fa-trash-alt"></i>
                     </a>
                   <?php endif; ?>
                 </td>

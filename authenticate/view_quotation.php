@@ -75,184 +75,297 @@
   $attachments = $stmt->fetchAll();
 ?>
 
-  <!-- Header -->
-  <div class="row mb-4 align-items-stretch row-gap-2">
-    <!-- Left Section: Titles -->
-    <div class="col-md-6 d-flex">
-      <a href="view_request.php?id=<?= $request['request_id'] ?>" class="text-body text-decoration-none w-100">
-        <div class="border rounded p-3 w-100 h-100 transition reqlink">
-          <h2 class="fw-bold mb-2">Request Title: <?= $request['title'] ?></h2>
-          <h4 class="text-muted mb-0">Event: <?= $request['description'] ?></h4>
-          <h5 class="text-muted mb-0">User Name: <?= $request['created_by'] ?></h5>
-        </div>
+<link rel="stylesheet" href="../assets/css/view_quotation.css">
+
+<!-- Page Header with Back Button -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-2 fw-bold text-body">Quotation Details</h1>
+    <p class="text-muted mb-0">Complete quotation information and vendor details</p>
+  </div>
+  <a href="quotations.php?request_id=<?= $quotation['request_id'] ?>" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Back to Quotations
+  </a>
+</div>
+
+<!-- Quotation Header -->
+<div class="quotation-header">
+  <div class="row align-items-center position-relative">
+    <div class="col-md-8">
+      <h2 class="quotation-number">Quotation #<?= $quote_serial['serial_number'] ?></h2>
+      <p class="quotation-subtitle">Submitted on <?= date('M d, Y \a\t g:i A', strtotime($quotation['submitted_at'])) ?></p>
+    </div>
+    <div class="col-md-4 text-md-end">
+      <span class="badge-modern <?= $badgeClass ?> fs-6">
+        <i class="fas fa-circle"></i> <?= htmlspecialchars($quotation['status']) ?>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Request Information -->
+<div class="status-card p-4 mb-4">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <div class="info-icon primary-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <h5 class="fw-bold mb-2">Associated Request</h5>
+      <a href="view_request.php?id=<?= $request['request_id'] ?>" class="text-decoration-none">
+        <h4 class="text-body mb-2"><?= htmlspecialchars($request['title']) ?></h4>
+      </a>
+      <p class="text-muted mb-3"><?= htmlspecialchars($request['description']) ?></p>
+      <div class="d-flex flex-wrap gap-3 text-sm">
+        <span class="text-muted">
+          <i class="fas fa-user me-2"></i><?= htmlspecialchars($request['created_by']) ?>
+        </span>
+        <span class="text-muted">
+          <i class="fas fa-calendar-alt me-2"></i><?= htmlspecialchars($request['event_date']) ?>
+        </span>
+        <span class="text-muted">
+          <i class="fas fa-university me-2"></i><?= htmlspecialchars($request['society_name']) ?>
+        </span>
+      </div>
+    </div>
+    <div class="col-md-4 text-md-end">
+      <a href="view_request.php?id=<?= $request['request_id'] ?>" class="action-btn theme_bg_color text-white">
+        <i class="fas fa-external-link-alt"></i> View Request Details
       </a>
     </div>
+  </div>
+</div>
 
-    <!-- Right Section: Meta Info -->
-    <div class="col-md-6 d-flex">
-      <div class="border rounded p-3 w-100 h-100 ms-md-1">
-        <p class="mb-2">
-          <i class="fas fa-calendar-alt"></i>
-          <strong>Event Date:</strong> <?= htmlspecialchars($request['event_date']) ?>
-        </p>
-        <p class="mb-2">
-          <i class="fas fa-university"></i>
-          <strong>Society:</strong> <?= htmlspecialchars($request['society_name']) ?>
-        </p>
-        <p class="mb-0">
-          <i class="fas fa-layer-group"></i>
-          <strong>Category:</strong> <?= htmlspecialchars($request['category_name']) ?>
-        </p>
+<!-- Vendor Information and Actions -->
+<div class="row g-4 mb-4">
+  <!-- Vendor Information -->
+  <div class="col-lg-6">
+    <div class="vendor-card">
+      <div class="info-icon primary-icon">
+        <i class="fas fa-building"></i>
+      </div>
+      <h5 class="fw-bold mb-3">Vendor Information</h5>
+      
+      <div class="vendor-info-item">
+        <div class="vendor-info-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div>
+          <div class="meta-label">Contact Person</div>
+          <div class="meta-value"><?= htmlspecialchars($quotation['name']) ?></div>
+        </div>
+      </div>
+
+      <div class="vendor-info-item">
+        <div class="vendor-info-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <div>
+          <div class="meta-label">Company</div>
+          <div class="meta-value"><?= htmlspecialchars($quotation['company']) ?></div>
+        </div>
+      </div>
+
+      <div class="vendor-info-item">
+        <div class="vendor-info-icon">
+          <i class="fas fa-id-card"></i>
+        </div>
+        <div>
+          <div class="meta-label">NTN</div>
+          <div class="meta-value"><?= htmlspecialchars($quotation['ntn']) ?></div>
+        </div>
+      </div>
+
+      <div class="vendor-info-item">
+        <div class="vendor-info-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div>
+          <div class="meta-label">Email</div>
+          <div class="meta-value"><?= htmlspecialchars($quotation['email']) ?></div>
+        </div>
+      </div>
+
+      <div class="vendor-info-item">
+        <div class="vendor-info-icon">
+          <i class="fas fa-phone"></i>
+        </div>
+        <div>
+          <div class="meta-label">Phone</div>
+          <div class="meta-value"><?= htmlspecialchars($quotation['phone']) ?></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <h4 class="mb-3">
-    <i class="fas fa-file-invoice-dollar"></i> 
-    Quotation # <?= $quote_serial['serial_number'] ?>
-  </h4>
-  <!-- Vendor Info and Status, Attachments -->
-  <div class="row mb-3">
-    <!-- Vendor Info -->
-    <div class="col-md-4 mb-3">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">
-            <i class="fas fa-user"></i> Vendor Info
-          </h5>
-        </div>
-        <div class="card-body">
-          <p class="mb-1">
-            <i class="fas fa-user-circle"></i> <strong>Name:</strong> <?= htmlspecialchars($quotation['name']) ?>
-          </p>
-          <p class="mb-1">
-            <i class="fas fa-building"></i> <strong>Company:</strong> <?= htmlspecialchars($quotation['company']) ?>
-          </p>
-          <p class="mb-1">
-            <i class="fas fa-id-card"></i> <strong>NTN:</strong> <?= htmlspecialchars($quotation['ntn']) ?>
-          </p>
-          <p class="mb-1">
-            <i class="fas fa-envelope"></i> <strong>Email:</strong> <?= htmlspecialchars($quotation['email']) ?>
-          </p>
-          <p class="mb-0">
-            <i class="fas fa-phone"></i> <strong>Phone:</strong> <?= htmlspecialchars($quotation['phone']) ?>
-          </p>
-        </div>
+  <!-- Actions and Attachments -->
+  <div class="col-lg-6">
+    <!-- Actions -->
+    <div class="status-card p-4 mb-4">
+      <div class="info-icon primary-icon">
+        <i class="fas fa-cogs"></i>
       </div>
-    </div>
-    <!-- Status -->
-    <div class="col-md-4 mb-3">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">
-            <i class="fas fa-info-circle"></i> Status
-          </h5>
-        </div>
-        <div class="card-body">
-          <p>
-            <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($quotation['status']) ?></span>
-          </p>
-          <div class="d-flex flex-wrap gap-2">
-            <?php if ($quotation['status'] !== 'Deleted'): ?>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Approved&request_id=<?= $request['request_id'] ?>" class="btn btn-success btn-sm">
-                <i class="fas fa-check-circle"></i> Approve
-              </a>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Rejected&request_id=<?= $request['request_id'] ?>" class="btn btn-warning btn-sm">
-                <i class="fas fa-times-circle"></i> Reject
-              </a>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Deleted&request_id=<?= $request['request_id'] ?>" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash-alt"></i> Recycle
-              </a>
-            <?php else: ?>
-              <a href="update_quotation_status.php?id=<?= $id ?>&status=Pending&request_id=<?= $request['request_id'] ?>" class="btn btn-success btn-sm">
-                <i class="fas fa-undo"></i> Restore
-              </a>
-              <a href="permanent_delete_quotation.php?id=<?= $id ?>&request_id=<?= $request['request_id'] ?>" 
-                 class="btn btn-danger btn-sm" onclick="return confirm('Permanently delete?')">
-                <i class="fas fa-fire"></i> Delete Permanently
-              </a>
-            <?php endif; ?>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Attachments -->
-    <div class="col-md-4 mb-3">
-      <div class="card h-100 shadow-sm">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">
-            <i class="fas fa-paperclip"></i> Attachments
-          </h5>
-        </div>
-        <div class="card-body">
-        <?php if ($attachments): ?>
-          <ul class="list-unstyled">
-            <?php foreach ($attachments as $a): ?>
-              <li>
-                <i class="fas fa-file"></i> 
-                <a href="<?= $a['filepath'] ?>" target="_blank"><?= htmlspecialchars($a['filename']) ?></a>
-              </li>
-            <?php endforeach; ?>
-          </ul>
+      <h5 class="fw-bold mb-3">Available Actions</h5>
+      
+      <div class="d-flex flex-wrap gap-2">
+        <?php if ($quotation['status'] !== 'Deleted'): ?>
+          <a href="update_quotation_status.php?id=<?= $id ?>&status=Approved&request_id=<?= $request['request_id'] ?>" class="action-btn btn btn-success" title="Approve Quotation">
+            <i class="fas fa-check-circle"></i> Approve
+          </a>
+          <a href="update_quotation_status.php?id=<?= $id ?>&status=Rejected&request_id=<?= $request['request_id'] ?>" class="action-btn btn btn-warning text-dark" title="Reject Quotation">
+            <i class="fas fa-times-circle"></i> Reject
+          </a>
+          <a href="update_quotation_status.php?id=<?= $id ?>&status=Deleted&request_id=<?= $request['request_id'] ?>" class="action-btn btn btn-danger" title="Move to Recycle">
+            <i class="fas fa-trash-alt"></i> Recycle
+          </a>
         <?php else: ?>
-          <p class="text-muted"><i class="fas fa-exclamation-circle"></i> No attachments.</p>
+          <a href="update_quotation_status.php?id=<?= $id ?>&status=Pending&request_id=<?= $request['request_id'] ?>" class="action-btn btn btn-success" title="Restore Quotation">
+            <i class="fas fa-undo"></i> Restore
+          </a>
+          <a href="permanent_delete_quotation.php?id=<?= $id ?>&request_id=<?= $request['request_id'] ?>" 
+             class="action-btn btn btn-danger" onclick="return confirm('Permanently delete this quotation?')" title="Delete Permanently">
+            <i class="fas fa-fire"></i> Delete Forever
+          </a>
         <?php endif; ?>
-        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Quotation Items -->
-  <div class="mb-3">
-    <h5 class="mb-3"><i class="fas fa-boxes"></i> Quotation Items</h5>
+    <!-- Attachments -->
+    <div class="status-card p-4">
+      <div class="info-icon primary-icon">
+        <i class="fas fa-paperclip"></i>
+      </div>
+      <h5 class="fw-bold mb-3">Attachments</h5>
+      
+      <?php if ($attachments): ?>
+        <div class="attachment-list">
+          <?php foreach ($attachments as $attachment): ?>
+            <div class="attachment-item">
+              <div class="attachment-icon">
+                <i class="fas fa-file"></i>
+              </div>
+              <div class="flex-grow-1">
+                <a href="<?= htmlspecialchars($attachment['filepath']) ?>" target="_blank" class="text-decoration-none fw-medium">
+                  <?= htmlspecialchars($attachment['filename']) ?>
+                </a>
+              </div>
+              <div class="flex-shrink-0">
+                <a href="<?= htmlspecialchars($attachment['filepath']) ?>" target="_blank" class="text-decoration-none fw-medium">
+                  <i class="fas fa-external-link-alt text-muted"></i>
+                </a>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php else: ?>
+        <div class="text-center py-3">
+          <i class="fas fa-paperclip text-muted" style="font-size: 2rem;"></i>
+          <p class="text-muted mt-3 mb-0">No attachments available</p>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</div>
+
+<!-- Quotation Items -->
+<div class="section-header">
+  <h5 class="mb-0 fw-bold">
+    <div class="info-icon primary-icon" style="display: inline-grid !important;margin-bottom: 0px;">
+      <i class="fas fa-boxes"></i>
+    </div> Quotation Items & Pricing
+  </h5>
+</div>
+<div class="section-body p-0 mb-4">
+  <?php if ($items): ?>
+    <?php 
+    $total = 0;
+    foreach ($items as $item) {
+      $total += $item['unit_price'] * $item['quantity'];
+    }
+    ?>
+    
+    <div class="total-amount">
+      <p class="amount">Rs. <?= number_format($total, 2) ?></p>
+      <p class="label">Total Quotation Amount</p>
+    </div>
+
     <div class="table-responsive">
-      <table class="table table-bordered table-sm align-middle table-striped">
-        <thead class="table-light">
+      <table class="modern-table table table-hover">
+        <thead>
           <tr>
-            <th><i class="fas fa-box"></i> Item/description with specifications</th>
-            <th><i class="fas fa-sort-numeric-up-alt"></i> Quantity/unit of measure</th>
-            <th><i class="fas fa-dollar-sign"></i> Unit Price</th>
-            <th><i class="fas fa-calculator"></i> Total</th>
+            <th><i class="fas fa-box me-2"></i>Item Description & Specifications</th>
+            <th class="text-center"><i class="fas fa-sort-numeric-up-alt me-2"></i>Quantity</th>
+            <th class="text-end"><i class="fas fa-dollar-sign me-2"></i>Unit Price</th>
+            <th class="text-end"><i class="fas fa-calculator me-2"></i>Total</th>
           </tr>
         </thead>
         <tbody>
-          <?php 
-          $total = 0;
-          foreach ($items as $item):
-            $line = $item['unit_price'] * $item['quantity'];
-            $total += $line;
+          <?php foreach ($items as $index => $item): 
+            $line_total = $item['unit_price'] * $item['quantity'];
           ?>
           <tr>
-            <td><?= htmlspecialchars($item['item_name']) ?></td>
-            <td><?= $item['quantity'] ?></td>
-            <td><?= number_format($item['unit_price'], 2) ?></td>
-            <td><?= number_format($line, 2) ?></td>
+            <td>
+              <div class="d-flex align-items-start gap-3">
+                <div class="flex-shrink-0">
+                  <span class="badge theme_bg_color rounded-circle" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                    <?= $index + 1 ?>
+                  </span>
+                </div>
+                <div>
+                  <div class="fw-medium"><?= htmlspecialchars($item['item_name']) ?></div>
+                </div>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-secondary fs-6 px-3 py-2"><?= htmlspecialchars($item['quantity']) ?></span>
+            </td>
+            <td class="text-end">
+              <span class="fw-medium">Rs. <?= number_format($item['unit_price'], 2) ?></span>
+            </td>
+            <td class="text-end">
+              <span class="fw-bold text-body">Rs. <?= number_format($line_total, 2) ?></span>
+            </td>
           </tr>
           <?php endforeach; ?>
         </tbody>
         <tfoot>
           <tr>
-            <th colspan="3" class="text-end"><i class="fas fa-coins"></i> Total&nbsp;</th>
-            <th><?= number_format($total, 2) ?></th>
+            <th colspan="3" class="text-end gt-th">
+              <i class="fas fa-coins me-2"></i>Grand Total
+            </th>
+            <th class="text-end to-th">Rs. <?= number_format($total, 2) ?></th>
           </tr>
         </tfoot>
       </table>
     </div>
-  </div>
+  <?php else: ?>
+    <div class="text-center py-5">
+      <i class="fas fa-box-open text-muted" style="font-size: 3rem;"></i>
+      <p class="text-muted mt-3 mb-0">No items found for this quotation</p>
+    </div>
+  <?php endif; ?>
+</div>
 
-  <!-- Vendor Message -->
-  <div class="mb-3">
-    <h5><i class="fas fa-comment-alt"></i> Vendor Message</h5>
-    <div class="border rounded p-3 bg-light">
-      <p class="mb-0"><?= nl2br(htmlspecialchars($quotation['message'])) ?></p>
+<!-- Vendor Message -->
+<div class="section-header">
+  <h5 class="mb-0 fw-bold">
+    <div class="info-icon primary-icon" style="display: inline-grid !important;margin-bottom: 0px;">
+      <i class="fas fa-comment-alt"></i>
+    </div> Vendor Message
+  </h5>
+</div>
+<div class="section-body">
+  <div class="vendor-message">
+    <div class="d-flex align-items-start gap-3">
+      <div class="flex-shrink-0">
+        <div class="vendor-info-icon">
+          <i class="fas fa-quote-left"></i>
+        </div>
+      </div>
+      <div class="flex-grow-1">
+        <p class="mb-0"><?= nl2br(htmlspecialchars($quotation['message'])) ?></p>
+      </div>
     </div>
   </div>
-
-  <!-- Back Button -->
-  <div class="text-start">
-    <a href="quotations.php?request_id=<?= $quotation['request_id'] ?>" class="btn btn-secondary btn-sm">
-      <i class="fas fa-arrow-left"></i> Back to Quotations
-    </a>
-  </div>
+</div>
 
 <?php include 'includes/footer.php'; ?>

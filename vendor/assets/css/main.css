@@ -1,3 +1,15 @@
+:root {
+  --primary-color: #903035;
+  --primary-hover: #975155;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 68px;
+  --transition-speed: 0.3s;
+  --border-radius: 4px;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+}
+
 .form-check-input {
   background-color: #ffffff;
   border-color: #979797;
@@ -69,7 +81,7 @@ body {
   transition: right 0.3s ease-in-out;
   z-index: 1050;
   /* border-left: 1px solid #ddd; */
-  border-radius: 6px 0px 0px 6px;
+  border-radius: 4px 0px 0px 4px;
   /* box-shadow: -2px 0 5px rgb(0 0 0 / 10%); */
 }
 
@@ -177,3 +189,5 @@ body {
 [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
   background-color: #9030358a;
 }
+
+.btn{ border-radius: 4px; }

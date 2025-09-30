@@ -9,17 +9,20 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY role, u
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2><i class="fas fa-users-cog"></i> User Management</h2>
-    <a href="add_user.php" class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-user-plus"></i> Add User</a>
+    <div>
+      <a href="add_user.php" class="btn btn-sm btn-outline-success"><i class="fas fa-user-plus"></i> Add User</a>
+      <a href="vendors.php" class="btn btn-sm btn-outline-primary"><i class="fas fa-users"></i> Vendors</a>
+    </div>
   </div>
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
       <thead class="table-light">
         <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
+          <th><i class="fas fa-user"></i> Name</th>
+          <th><i class="fas fa-envelope"></i> Email</th>
+          <th><i class="fas fa-id-card"></i> Role</th>
+          <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -28,13 +31,24 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY role, u
             <td><?= htmlspecialchars($u['username']) ?></td>
             <td><?= htmlspecialchars($u['email']) ?></td>
             <td><?= ucfirst($u['role']) ?></td>
-            <td style="max-width: 20px;">
-              <a href="edit_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-warning">
-                <i class="fas fa-edit"></i> Edit
+            <td style="max-width: 20px;" class="text-center">
+              <a href="edit_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-warning" title="Edit User">
+                <i class="fas fa-edit"></i>
               </a>
-              <a href="delete_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete user?')">
-                <i class="fas fa-trash-alt"></i> Delete
-              </a>
+              <?php 
+                $stmt = $pdo->prepare("SELECT * FROM `users` INNER JOIN requests ON users.id = requests.user_id WHERE users.id = ?");
+                $stmt->execute([$u['id']]);
+                $result = $stmt->fetchAll();
+              if(count($result) > 0):
+              ?>
+                <button class="btn btn-sm btn-secondary" title="User can't be deleted due to having a request.">
+                  <i class="fas fa-ban"></i>
+                </button>
+              <?php else:?>
+                <a href="delete_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" title="Delete User" onclick="return confirm('Delete user?')">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              <?php endif;?>
             </td>
           </tr>
         <?php endforeach; ?>

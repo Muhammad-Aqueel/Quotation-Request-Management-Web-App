@@ -1,4 +1,5 @@
 <?php
+  ob_start();
   include 'includes/header.php';
   require_once 'includes/csrf.php';
 
@@ -7,6 +8,12 @@
       // Update request status
       $stmt = $pdo->prepare("UPDATE requests SET status = ? WHERE id = ? AND user_id = ?");
       $stmt->execute([$_GET['status'], $_GET['id'], $_SESSION['user_id']]);
+      // Determine where to redirect
+      $referer = $_SERVER['HTTP_REFERER'] ?? '';
+      if (strpos($referer, 'view_request.php') !== false) {
+        header("Location: view_request.php?id=" . $_GET['id']);
+        exit;
+      }
     } else {
       echo ('<div class="container-fluid mt-4">
           <div class="col-6 m-auto bg-body p-4 shadow-sm rounded">
@@ -46,88 +53,105 @@
     $stmt->execute([$_POST['tandc']]);
     $tandc = $pdo->query("SELECT * FROM terms_and_conditions")->fetchAll();
   }
+  ob_end_flush();
 ?>
 
 <?php if ($_SESSION['user_role'] === 'student'): ?>
-  <div class="container">
+  <div class="container-fluid">
     <div class="d-flex mb-3 align-items-center justify-content-between">
-      <h2><i class="fas fa-tasks"></i> Manage Requests</h2>
+      <h2><i class="fas fa-tasks"></i> Manage RFQ</h2>
       <div>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#rfqmodal">
+          <i class="fas fa-plus"></i> Add Request
+        </button>
         <a href="request_category.php" class="btn btn-sm btn-outline-primary ">
           <i class="fa-solid fa-layer-group"></i> Categories
         </a>
-      </div>
-    </div>
-    
-    <form action="add_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light mb-4 shadow-sm">
-      <h5><i class="fas fa-plus-circle"></i> Add New Request</h5>
-      <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
-      <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
-      <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
-        <div style="flex-grow: 6;">
-          <input type="text" class="form-control bg-body-secondary" name="title" placeholder="Request Title" readonly required value="<?php
-            $latestId = isset($requests[0]) ? $requests[0]['id'] : null; // Last ID from database
-            $id = $latestId + 1; // Last ID + 1
-            $formatted_title = sprintf("PR%04d", $id);
-            echo $formatted_title; // Output e.g: PR0001
-          ?>" >
-        </div>
-        <div style="flex-grow: 1;">
-          <input type="text" name="eventdate" id="date-range-picker" class="form-control" placeholder="From... to..." readonly>
-        </div>
-        <div style="flex-grow: 2;">
-          <select name="society_id" class="form-select" required>
-            <option value="" disabled selected>Select Society</option>
-            <?php foreach ($socs as $soc): ?>
-              <option value="<?= $soc['id'] ?>"><?= htmlspecialchars($soc['society_name']) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div style="flex-grow: 2;">
-          <select name="category_id" class="form-select" required>
-            <option value="" disabled selected>Select Category</option>
-            <?php foreach ($cats as $cat): ?>
-              <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-      </div>
-      <div class="d-flex mb-2 row-gap-2 column-gap-2 flex-wrap">
-        <div style="flex-grow: 6;">
-          <textarea name="description" class="form-control" placeholder="Event" rows="1" required></textarea>
-        </div>
-        <div class="d-flex column-gap-2" style="flex-grow: 6;">
-          <div style="flex-grow: 6;">
-            <textarea name="tandc" class="form-control bg-body-secondary" placeholder="Terms and conditions" rows="1" readonly><?= $tandc[0]['content'] ?></textarea>
-          </div>
-          <button type="button" title="edit terms and conditions" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#tandcModal">
-            <i class="fas fa-edit"></i>
-          </button>
-        </div>
-      </div>
-      <div class="mb-2">
-        <label><i class="fas fa-box"></i> Items</label>
-        <div id="items">
-          <div class="d-flex gap-2 mb-2 item-row">
-            <label class="form-label my-auto item-index" style="width: 20px;">1</label>
-            <input type="text" name="item_name[]" class="form-control" placeholder="Item/description with specifications" required>
-            <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity/unit of measure" required>
-          </div>
-        </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addItem()">
-          <i class="fas fa-plus"></i> Add Item
+        <button type="button" title="Edit Terms and Conditions" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#tandcModal">
+          <i class="fas fa-edit"></i> Terms and Conditions
         </button>
       </div>
-      <div class="mb-3">
-        <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-circle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
-        <input type="file" name="attachments[]" class="form-control" multiple>
+    </div>
+
+    <div class="container-fluid">
+      <div class="modal fade" id="rfqmodal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 70%;">
+          <div class="modal-content">
+            <!-- <div class="modal-header">
+              <button type="button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> -->
+            <div class="modal-body">
+              <!-- Modal body goes here.-->
+              <form action="add_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light shadow-sm">
+                <h5><i class="fas fa-plus-circle"></i> Add New Request</h5>
+                <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
+                <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
+                <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
+                  <div style="flex-grow: 6;">
+                    <input type="text" class="form-control bg-body-secondary" name="title" placeholder="Request Title" readonly required value="Title (auto-generate)" >
+                  </div>
+                  <div style="flex-grow: 1;">
+                    <input type="text" name="eventdate" id="date-range-picker" class="form-control" placeholder="From... to..." readonly>
+                  </div>
+                  <div style="flex-grow: 2;">
+                    <select name="society_id" class="form-select" required>
+                      <option value="" disabled selected>Select Society</option>
+                      <?php foreach ($socs as $soc): ?>
+                        <option value="<?= $soc['id'] ?>"><?= htmlspecialchars($soc['society_name']) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div style="flex-grow: 2;">
+                    <select name="category_id" class="form-select" required>
+                      <option value="" disabled selected>Select Category</option>
+                      <?php foreach ($cats as $cat): ?>
+                        <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="d-flex mb-2 row-gap-2 column-gap-2 flex-wrap">
+                  <div style="flex-grow: 6;">
+                    <textarea name="description" class="form-control" placeholder="Event" rows="1" required></textarea>
+                  </div>
+                  <div class="d-flex column-gap-2" style="flex-grow: 6;">
+                    <div style="flex-grow: 6;">
+                      <textarea name="tandc" class="form-control bg-body-secondary" placeholder="Terms and conditions" rows="1" readonly><?= $tandc[0]['content'] ?></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-2">
+                  <label><i class="fas fa-box"></i> Items</label>
+                  <div id="items">
+                    <div class="d-flex gap-2 mb-2 item-row">
+                      <label class="form-label my-auto item-index" style="width: 20px;">1</label>
+                      <input type="text" name="item_name[]" class="form-control" placeholder="Item/description with specifications" required>
+                      <input type="number" name="quantity[]" min="1" class="form-control" placeholder="Quantity/unit of measure" required>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="addItem()">
+                    <i class="fas fa-plus"></i> Add Item
+                  </button>
+                </div>
+                <div class="mb-3">
+                  <label><i class="fas fa-paperclip"></i> Attachments (optional): <i class="fas fa-exclamation-circle"></i> Only pdf, jpg, jpeg, png, docx and doc files format allowed having max size of 1 MB and 5 MB in total for multiple files.</label>
+                  <input type="file" name="attachments[]" class="form-control" multiple>
+                </div>
+                <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
+                  <i class="fas fa-check-circle"></i> Create Request
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
+              </form>
+            </div>
+            <!-- <div class="modal-footer">
+            </div> -->
+          </div>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary theme_bg_color theme_border_color">
-        <i class="fas fa-check-circle"></i> Create Request
-      </button>
-    </form>
+    </div>
   </div>
 <?php endif; ?>
+
 <form method="post" action="bulk_request_action.php">
   <div class="d-flex flex-wrap justify-content-between align-items-baseline">
     <h5><i class="fas fa-list-ul"></i> Existing Requests</h5>
@@ -156,7 +180,7 @@
           <th><i class="fas fa-university"></i> Society</th>
           <th><i class="fas fa-circle-info"></i> Event name</th>
           <th><i class="fas fa-calendar-alt"></i> Date</th>
-          <th title="View Quotations"><i class="fas fa-money-check-dollar"></i></th>
+          <th title="View Quotations" class="text-center"><i class="fas fa-money-check-dollar"></i></th>
           <th class="text-center"><i class="fa-solid fa-user-gear"></i>
             <?php if ($_SESSION['user_role'] === 'student'): ?>
               Approval &nbsp;<i class="fas fa-info-circle"></i> Status
@@ -164,7 +188,7 @@
               Approval
             <?php endif; ?>
           </th>
-          <th><i class="fas fa-cogs"></i> Actions</th>
+          <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -211,7 +235,7 @@
             <td class="text-center">
               <span class="badge <?= $abadgeClass ?>"><?= htmlspecialchars($astatus) ?></span>
               <?php if ($_SESSION['user_role'] === 'admin' && $r['approval_status'] == 'Approved'): ?>
-                <a href="generate_purchase_order.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-primary" title="Purchase Order" target="_blank">
+                <a href="generate_purchase_order.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-success" title="Purchase Order" target="_blank">
                   <i class="fas fa-print"></i>
                 </a>
               <?php endif; ?>
@@ -219,6 +243,9 @@
                 &nbsp;<span class="badge <?= $sbadgeClass ?>"><?= $stext ?></span>
                 <?php if ($r['purchase_order'] == '1'): ?>
                   &nbsp;<span class="badge bg-danger">Payment Request</span>
+                  <a href="generate_payment_request.php?request_id=<?= $r['id'] ?>" class="btn btn-sm btn-danger" title="Payment Request" target="_blank">
+                    <i class="fas fa-print"></i>
+                  </a>
               <?php endif; endif; ?>
             </td>
             <td class="text-center">
@@ -249,7 +276,7 @@
                   <i class="fas fa-times-circle"></i>
                 </a>
               <?php endif; ?>
-                <a href="view_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-info" title="View Request">
+                <a href="view_request.php?id=<?= $r['id'] ?>" class="btn btn-sm btn-info" title="View Request" target="_blank">
                   <i class="fas fa-eye"></i>
                 </a>
             </td>
@@ -308,6 +335,7 @@
     </div>
   </div>
 </div>
+
 <?php if ($_SESSION['user_role'] === 'student'): ?>
   <script>
     function addItem() {
@@ -335,4 +363,5 @@
     }
   </script>
 <?php endif; ?>
+
 <?php include 'includes/footer.php'; ?>

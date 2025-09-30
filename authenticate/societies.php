@@ -48,16 +48,11 @@
 
   <!-- Add Society Form -->
   <form method="post" class="mb-4 row g-2">
-    <div class="col-md-6">
-      <input type="text" name="society_name" class="form-control" placeholder="New society name" required>
-    </div>
-    <div class="col-md-auto">
-      <button type="submit" name="add" class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-plus-circle"></i> Add</button>
-    </div>
-    <div class="col-md-auto">
-      <a href="requests.php" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back
-      </a>
+    <div class="col-md-6 d-flex align-items-center gap-2">
+      <input type="text" name="society_name" class="form-control" placeholder="New society name" required="">
+      <button type="submit" name="add" class="btn btn-primary flex-shrink-0 theme_bg_color theme_border_color">
+        <i class="fas fa-plus-circle"></i> Add
+      </button>
     </div>
   </form>
 
@@ -66,7 +61,7 @@
     <thead class="table-light">
       <tr>
         <th style="width: 500px;"><i class="fas fa-users"></i> Society</th>
-        <th style="width: 200px;"><i class="fas fa-cogs"></i> Action</th>
+        <th style="width: 200px;" class="text-center"><i class="fas fa-cogs"></i> Action</th>
       </tr>
     </thead>
     <tbody>
@@ -76,7 +71,7 @@
         <td class="text-center">
           <form method="post" onsubmit="return confirm('Delete this Society?')">
             <input type="hidden" name="delete_id" value="<?= $s['id'] ?>">
-            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+            <button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
           </form>
         </td>
       </tr>

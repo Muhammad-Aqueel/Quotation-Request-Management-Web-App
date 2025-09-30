@@ -37,16 +37,16 @@
   <form id="edit_request_form" action="update_request.php" method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light shadow-sm">
     <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
     <input type="hidden" name="id" value="<?= $id ?>">
-    <div class="d-flex">
-      <div class="mb-3" style="flex-grow: 6;">
+    <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
+      <div style="flex-grow: 6;">
         <label><i class="fas fa-heading"></i> Title</label>
         <input type="text" class="form-control" name="title" value="<?= htmlspecialchars($request['title']) ?>" required>
       </div>
-      <div class="mb-3 ms-2" style="flex-grow: 1;">
+      <div style="flex-grow: 1;">
           <label><i class="fas fa-calendar-days"></i> Date From... to...</label>
           <input type="text" name="eventdate" id="date-range-picker" class="form-control" readonly value="<?= htmlspecialchars($request['event_date']) ?>">
         </div>
-      <div class="mb-3 ms-2" style="flex-grow: 2;">
+      <div style="flex-grow: 2;">
         <label><i class="fas fa-university"></i> Society</label>
         <select name="society_id" class="form-select" required>
           <?php foreach ($socs as $soc): ?>
@@ -54,7 +54,7 @@
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="mb-3 ms-2" style="flex-grow: 2;">
+      <div style="flex-grow: 2;">
         <label><i class="fas fa-layer-group"></i> Category</label>
         <select name="category_id" class="form-select" required>
           <?php foreach ($cats as $cat): ?>
@@ -64,12 +64,12 @@
       </div>
     </div>
 
-    <div class="d-flex">
-      <div class="mb-3" style="flex-grow: 6;">
+    <div class="d-flex mb-3 row-gap-2 column-gap-2 flex-wrap">
+      <div style="flex-grow: 6;">
         <label><i class="fas fa-note-sticky"></i> Event</label>
         <textarea name="description" class="form-control" rows="1" required><?= htmlspecialchars($request['description']) ?></textarea>
       </div>
-      <div class="mb-2 ms-2" style="flex-grow: 6;">
+      <div style="flex-grow: 6;">
         <label><i class="fa-solid fa-file-contract"></i> Terms and conditions</label>
         <textarea name="tandc" class="form-control bg-body-secondary" rows="1" readonly><?= $tandc[0]['content'] ?></textarea>
       </div>
@@ -109,7 +109,7 @@
       <h6><i class="fas fa-folder-open"></i> Existing Attachments</h6>
       <ul id="attachment-list">
         <?php foreach ($attachments as $a): ?>
-          <li id="attachment-<?= $a['id'] ?>">
+          <li id="attachment-<?= $a['id'] ?>" class="list-unstyled">
             <a href="<?= $a['filepath'] ?>" target="_blank">
               <i class="fas fa-paperclip"></i> <?= htmlspecialchars($a['filename']) ?>
             </a>
@@ -124,7 +124,13 @@
     <?php endif; ?>
 
     <button type="submit" class="btn btn-primary theme_bg_color theme_border_color"><i class="fas fa-save"></i> Save Changes</button>
-    <a href="requests.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancel</a>
+    <?php // Determine where to redirect
+      $referer = $_SERVER['HTTP_REFERER'] ?? '';
+      if (strpos($referer, 'view_request.php') !== false): ?>
+          <a href="view_request.php?id=<?= $id ?>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancel</a>
+    <?php else: ?>
+          <a href="requests.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancel</a>
+    <?php endif; ?>
   </form>
 </div>
 
