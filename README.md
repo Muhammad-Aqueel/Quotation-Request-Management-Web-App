@@ -124,6 +124,7 @@ Use `zip_me_first.php` to generate a deployable ZIP archive of the app, excludin
 
 # Quotation App Directory Structure
 
+```text
 quotation-app/
 │
 ├── assets/                      # Static assets
@@ -233,7 +234,7 @@ quotation-app/
 ├── config.php                    # App configuration (Auto-generate by installer)
 ├── index.php                     # Homepage/entry point
 └── zip_me_first.php              # Utility script (zip/export)
-
+```
 ---
 
 ## Developer Notes
